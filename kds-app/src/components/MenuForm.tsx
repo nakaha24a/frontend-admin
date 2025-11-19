@@ -27,7 +27,7 @@ export const MenuForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => 
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginBottom: "1rem" }}>
+    <form className="menu-form" onSubmit={handleSubmit} style={{ marginBottom: "1rem" }}>
       <input name="id" value={menu.id} onChange={handleChange} placeholder="ID" required />
       <input name="name" value={menu.name} onChange={handleChange} placeholder="メニュー名" required />
       <input

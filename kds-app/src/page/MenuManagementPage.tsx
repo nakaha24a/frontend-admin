@@ -31,9 +31,12 @@ export const MenuManagementPage: React.FC = () => {
 
   return (
     <div style={{ padding: "20px" }}>
-      <h1>メニュー管理</h1>
+      <h1 style={{color:'blue',}} >メニュー管理</h1>
       <button
         style={{
+          position: 'fixed', 
+          top: '20px',        
+          right: '20px',   
           marginBottom: '20px',
           padding: '6px 12px',
           backgroundColor: '#3498db',

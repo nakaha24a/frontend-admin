@@ -1,5 +1,4 @@
 import { STATUS_MAP_FROM_API, type ApiOrderStatus, type Order } from "../types/order";
- 
 import type { MenuResponse } from "../types/menu";
  
 // サーバーから返される注文オブジェクトの型定義
@@ -20,9 +19,8 @@ export interface Menu {
  
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
  
-/**
- * キッチン用の注文リスト（調理中、提供済み）をサーバーから取得する
- */
+
+/* キッチン用の注文リスト（調理中、提供済み）をサーバーから取得する */
 export async function fetchKitchenOrders(): Promise<KitchenOrder[]> {
   const url = `${API_BASE_URL}/api/kitchen/orders`;
  
@@ -154,7 +152,7 @@ export const fetchMenuList = async (): Promise<MenuResponse> => {
 };
  
 export const createMenu = async (menu: Menu): Promise<void> => {
-  const res = await fetch(API_BASE_URL, {
+  const res = await fetch(`${API_BASE_URL}/api/admin/menu`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(menu),
@@ -167,7 +165,7 @@ export const createMenu = async (menu: Menu): Promise<void> => {
 };
  
 export const updateMenu = async (id: string, menu: Partial<Menu>): Promise<void> => {
-  const res = await fetch(`${API_BASE_URL}/${id}`, {
+  const res = await fetch(`${API_BASE_URL}/api/admin/menu/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(menu),
@@ -179,8 +177,9 @@ export const updateMenu = async (id: string, menu: Partial<Menu>): Promise<void>
   }
 };
  
+
 export const deleteMenu = async (id: string): Promise<void> => {
-  const res = await fetch(`${API_BASE_URL}/${id}`, {
+  const res = await fetch(`${API_BASE_URL}/api/admin/menu/${id}`, {
     method: "DELETE",
   });
  

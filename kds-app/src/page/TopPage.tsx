@@ -1,7 +1,7 @@
 
 import { useNavigate } from 'react-router-dom';
 import {type KitchenOrder,fetchKitchenOrders} from '../api/backendapi.tsx';
-import './TopPage.css';
+
 
 function TopPage() {
    
@@ -60,7 +60,7 @@ async function loadAndDisplayKitchenOrders() {
         const htmlContent = orders.map(order => {
             return `
                 <li data-order-id="${order.id}">
-                    **卓番号: ${order.tableNumber}** / 状態: ${order.status}
+                    **卓番号: ${order.table_number}** / 状態: ${order.status}
                     <br>注文時刻: ${new Date(order.timestamp).toLocaleTimeString()}
                 </li>
             `;
