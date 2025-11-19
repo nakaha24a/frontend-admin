@@ -1,5 +1,9 @@
+//MenuForm.tsx
+
 import React, { useState } from "react";
 import { createMenu } from "../api/backendapi";
+
+
 
 export const MenuForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
   const [menu, setMenu] = useState({ id: "", name: "", price: 0, category: "" });
@@ -12,6 +16,7 @@ export const MenuForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => 
     e.preventDefault();
     try {
       await createMenu({ ...menu, price: Number(menu.price) });
+
       alert("メニューを追加しました！");
       setMenu({ id: "", name: "", price: 0, category: "" });
       onSuccess(); // リロード
