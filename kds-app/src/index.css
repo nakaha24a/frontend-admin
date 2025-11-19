@@ -1,0 +1,218 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: black;
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+
+
+/* --- 0. 基本リセットとグローバルスタイル --- */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    box-sizing: border-box;
+}
+
+/* --- 1. ページ全体 (中央寄せと最大幅) --- */
+.kds-page-container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto; 
+    height: 300vh;
+}
+
+/* --- ヘッダーとボタンの基本スタイル --- */
+.kds-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #ddd;
+}
+
+.add-order-button {
+    padding: 10px 15px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.status-0-button {
+    background-color: #FFC107;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.status-1-button {
+    background-color: #4CAF50;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.status-2-button {
+    background-color: #2196F3;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.status-3-button {
+    background-color: #607D8B;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.delete-button {
+    background-color: #F44336; 
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+
+.add-order-button:hover {
+    background-color: #0056b3;
+}
+
+/* --- 2. ボードのレイアウト (Flexbox/レスポンシブの核) --- */
+.kds-board {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    overflow-x: auto; /* PC/広い画面では横スクロールを許可 */
+}
+
+/* --- 3. カラムの基本スタイル --- */
+.order-column {
+    flex-shrink: 0; /* 縮まないように固定 */
+    width: 300px; /* PC/広い画面での固定幅 */
+    padding: 15px;
+    border: 1px solid #ccc;
+    
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+.column-title {
+    font-size: 1.2em;
+    border-bottom: 2px solid #f4f4f4;
+    padding-bottom: 10px;
+    margin-top: 0;
+}
+
+/* --- 4. 注文カードのスタイル --- */
+.order-card {
+    padding: 15px;
+    border: 1px solid #eee;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.item-list {
+    
+    padding: 0;
+    margin: 10px 0;
+    font-size: 0.95em;
+}
+
+.action-button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #28a745; /* デフォルトのボタン色 */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s;
+}
+
+.action-button:hover {
+    background-color: #1e7e34;
+}
+
+/* --- 経過時間のアラート色 --- */
+.order-time {
+    color: #666;
+}
+.order-time-alert {
+    color: red;
+    font-weight: bold;
+    animation: pulse 1s infinite alternate; /* 警告を強調 */
+}
+@keyframes pulse {
+    from { opacity: 1; }
+    to { opacity: 0.7; }
+}
+
+/* --- 5. レスポンシブ対応 (メディアクエリ) --- */
+@media (max-width: 800px) {
+    /* ボード全体を縦方向に変更 */
+    .kds-board {
+        flex-direction: column;
+        gap: 15px;
+        overflow-x: hidden;
+    }
+
+    /* カラムを画面いっぱいに広げる */
+    .order-column {
+        width: 100%;
+    }
+    
+    /* ページ左右のパディングを減らす */
+    .kds-page-container {
+        padding: 10px;
+    }
+}
+

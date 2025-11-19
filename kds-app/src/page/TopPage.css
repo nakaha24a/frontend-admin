@@ -1,0 +1,55 @@
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+
+/* Topページ全体のレイアウト */
+.top-page {
+  text-align: center;
+  max-width: 1200px;  
+  margin: 50px auto;  
+  padding: 0 20px;   
+  font-family: Arial, sans-serif;
+  color:lightblue;
+}
+
+/* ページタイトル */
+.top-h1 {
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+  color: #2c3e50;
+}
+
+/* ボタンのコンテナ */
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* ボタン間のスペース */
+}
+
+/* ボタンの共通スタイル */
+.button {
+  padding: 12px 24px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  background-color: #3498db;
+  color: #fff;
+}
+
+/* ボタンのホバー時 */
+.button:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+}
+
+/* ボタンのアクティブ時 */
+.button:active {
+  transform: translateY(1px);
+  background-color: #1f618d;
+}
