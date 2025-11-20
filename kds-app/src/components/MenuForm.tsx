@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { createMenu } from "../api/backendapi";
 
 
-
 export const MenuForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
   const [menu, setMenu] = useState({ id: "", name: "", price: 0, category: "" });
 
