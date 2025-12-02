@@ -1,72 +1,60 @@
-import React, { useState, useEffect } from 'react';
-import { useOrders } from '../hook/useOrders';
-import OrderBoard from '../components/OrderBoard';
-import { fetchTableNumbers } from '../api/backendapi';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import OrderBoard from "../components/OrderBoard";
+import { useOrders } from "../hook/useOrders";
 
 const OrderManagementPage: React.FC = () => {
-  const [selectedTable, setSelectedTable] = useState<string | undefined>();
-  const [tableNumbers, setTableNumbers] = useState<string[]>([]);
-  const {groupedOrders, loading, error, changeOrderStatus, deleteOrder, setSelectedTable: setTable } = useOrders(selectedTable);
-   const navigate = useNavigate();
+  // 引数なし = キッチンモード（全注文取得）
+  const {
+    groupedOrders,
+    loading,
+    error,
+    changeOrderStatus,
+    deleteOrder,
+    selectedTable, // 特定のテーブルを見たい場合のUIがあれば使う
+    setSelectedTable, // 同上
+    tableNumbers, // 同上
+  } = useOrders();
 
-  // 初回レンダーでテーブル番号一覧を取得
-  useEffect(() => {
-    fetchTableNumbers()
-      .then((tables) => setTableNumbers(tables))
-      .catch((err) => console.error('テーブル番号取得エラー:', err));
-  }, []);
+  if (loading && Object.keys(groupedOrders).length === 0) {
+    return <div className="p-4">読み込み中...</div>;
+  }
 
-  // テーブル選択変更時に useOrders に伝える
-  const handleTableChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const table = e.target.value;
-    setSelectedTable(table); // local state
-    setTable?.(table);       // useOrders 内の state に反映
-  };
+  if (error) {
+    return <div className="p-4 text-red-500">エラー: {error}</div>;
+  }
 
   return (
-    <div className="kds-page-container">
-      <header className="kds-header">
-        <h1>🍕 注文管理ボード</h1>
-        <div>
-          <label>
-            テーブル選択:
-            <select value={selectedTable} onChange={handleTableChange}>
-              <option value="">--選択してください--</option>
-              {tableNumbers.map((t) => (
-                <option key={t} value={t}>{t}</option>
-              ))}
-            </select>
-          </label>
-        </div>
+    <div className="order-management-page h-screen flex flex-col">
+      <header className="bg-gray-800 text-white p-4 flex justify-between items-center shadow-md">
+        <h1 className="text-xl font-bold">
+          キッチンディスプレイ (KDS)
+          {/* 開発用: 接続先確認 */}
+          <span className="text-xs ml-4 font-normal text-gray-400">
+            Server: {import.meta.env.VITE_API_BASE_URL}
+          </span>
+        </h1>
 
-        <button
-          style={{
-            marginTop: '10px',
-            padding: '6px 12px',
-            backgroundColor: '#3498db',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '6px',
-            cursor: 'pointer'
-          }}
-          onClick={() => navigate('/')}
+        {/* 必要であればここにテーブルフィルタ用のドロップダウンを配置 */}
+        {/* <select 
+          className="text-black p-1 rounded"
+          onChange={(e) => setSelectedTable(e.target.value)}
+          value={selectedTable || ""}
         >
-          トップに戻る
-        </button>
-      
+          <option value="">全テーブル表示</option>
+          {tableNumbers.map(num => (
+            <option key={num} value={num}>Table {num}</option>
+          ))}
+        </select>
+        */}
       </header>
 
-      {loading && <p>読み込み中...</p>}
-      {error && <p style={{ color: 'red' }}>エラー: {error}</p>}
-
-      {!loading && !error && selectedTable && (
+      <div className="flex-1 overflow-auto p-4 bg-gray-100">
         <OrderBoard
           orders={groupedOrders}
           onStatusChange={changeOrderStatus}
           onDelete={deleteOrder}
         />
-      )}
+      </div>
     </div>
   );
 };

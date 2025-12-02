@@ -1,29 +1,28 @@
-//useOrder.tsx
+import { useState, useCallback, useMemo, useEffect } from "react";
+import type {
+  Order,
+  GroupedOrders,
+  ApiOrderStatus,
+  OrderStatus,
+} from "../types/order";
+// fetchKitchenOrders を追加インポート
+import {
+  fetchOrdersByTable,
+  fetchTableNumbers,
+  fetchKitchenOrders,
+  updateOrderStatus,
+} from "../api/backendapi";
 
-import { useState, useCallback, useMemo, useEffect } from 'react';
-import type { Order, ApiOrderStatus, GroupedOrders, OrderStatus } from '../types/order';
-import {fetchOrdersByTable,fetchTableNumbers} from '../api/backendapi';
-import { getOrderStatus} from '../types/order';
-
-
-/* 仮の初期データ
-const initialOrders: Order[]initialOrders: Order[] = [
-  { id: 101, table: 'T-5', status: 0, items: ['マルゲリータ x 1', '生ビール x 2'], time: new Date() },
-  { id: 102, table: 'T-2', status: 1, items: ['特製ハンバーグ x 1', 'ライス(大) x 1'], time: new Date(Date.now() - 600000) },
-];
-
-
-let orderIdCounter = 102;
-*/
-
-export interface ApiOrder {
-  id: number;
-  table: string;
-  status: ApiOrderStatus; // "調理中" | "提供済み" | "会計済み" | "キャンセル" | "新規受付"
-  items: string[];        // DBでJSON文字列の場合はJSON.parseが必要
-  time: string;      // ISO文字列
-}
-
+// APIから返ってくる型とフロントの型を合わせるためのマップ
+// backendapi側ですでに変換されている場合は不要ですが、念のため
+const STATUS_MAP: Record<string, OrderStatus> = {
+  注文受付: 0,
+  調理中: 1,
+  調理完了: 2,
+  提供済み: 3,
+  会計済み: 3,
+  呼び出し: 0, // 呼び出しは「注文受付」と同じ扱いにしてみる
+};
 
 export const useOrders = (tableNumber?: string) => {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -32,86 +31,127 @@ export const useOrders = (tableNumber?: string) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
+  // テーブル番号一覧のロード（初回のみ）
+  useEffect(() => {
     const loadTableNumbers = async () => {
       try {
-        const tables = await fetchTableNumbers(); // ← /api/tables を叩いて取得する関数
+        const tables = await fetchTableNumbers();
         setTableNumbers(tables);
-
-        // 最初のテーブルを自動で選択（必要に応じて変更）
-        if (tables.length > 0) {
-          setSelectedTable(tables[0]);
-        }
       } catch (err) {
-        setError('テーブル番号の取得に失敗しました。');
-        console.error(err);
+        console.error("テーブル番号取得失敗", err);
       }
     };
-
     loadTableNumbers();
   }, []);
 
+  /** 注文データの取得関数 */
+  const loadOrders = useCallback(async () => {
+    try {
+      let fetchedOrders: any[] = [];
 
-  /** 初回レンダーでAPIを叩いて注文を取得 */
-  useEffect(() => {
-    if (!tableNumber) return;
+      // テーブル番号があれば「そのテーブル」、なければ「キッチン全件」を取得
+      if (tableNumber) {
+        fetchedOrders = await fetchOrdersByTable(tableNumber);
+      } else {
+        fetchedOrders = await fetchKitchenOrders();
+      }
 
-    setLoading(true);
-    fetchOrdersByTable(tableNumber)
-      .then(fetchedOrders => {
-        const STATUS_MAP_FROM_API: Record<string, OrderStatus> = {
-        "注文受付": 0,
-        "調理中": 1,
-        "調理完了":2,
-        "提供済み": 3,
-        "会計済み": 3,
-        };
-        console.log('fetchedOrders raw:', fetchedOrders);
+      // データ変換処理
+      const convertedOrders: Order[] = fetchedOrders.map((o) => {
+        // ステータスが文字列で来る場合と数値で来る場合の両方に対応
+        let statusVal: OrderStatus = 0;
+        if (typeof o.status === "number") {
+          statusVal = o.status as OrderStatus;
+        } else if (typeof o.status === "string") {
+          statusVal = STATUS_MAP[o.status] ?? 0;
+        }
 
-        const convertedOrders: Order[] = fetchedOrders.map(o => ({
-          
+        return {
           id: o.id,
-          table: o.table,
-          status: STATUS_MAP_FROM_API[o.status as unknown as ApiOrderStatus],
-          items: Array.isArray(o.items) ? o.items : JSON.parse(o.items),
-          time: new Date(o.time),
-        }));
-        setOrders(convertedOrders);
-        console.log('convertedOrders:', convertedOrders);
-      })
-      
-      .catch(err => setError((err as Error).message))
-      .finally(() => setLoading(false));
-  }, [tableNumber]);
+          table: o.table_number || o.table || "不明",
+          status: statusVal,
+          // JSON文字列ならパース、既に配列ならそのまま
+          items: typeof o.items === "string" ? JSON.parse(o.items) : o.items,
+          time: new Date(o.timestamp || o.time),
+        };
+      });
 
+      // 重複や順序を考慮してセット（ReactのState更新）
+      setOrders(convertedOrders);
+      setError(null);
+    } catch (err) {
+      console.error(err);
+      // ポーリング中はエラーを表示し続けると鬱陶しいので、初回のみあるいはコンソールだけにする
+      if (loading) setError((err as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  }, [tableNumber, loading]);
 
-  /** 注文削除 */
+  /** 初回実行 ＆ ポーリング（自動更新）設定 */
+  useEffect(() => {
+    // マウント時に即実行
+    loadOrders();
+
+    // 5秒ごとに更新 (ポーリング)
+    const intervalId = setInterval(() => {
+      loadOrders();
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [loadOrders]);
+
+  /** 注文削除 (今回は使いませんが残します) */
   const deleteOrder = useCallback((orderId: number) => {
-    setOrders(prev => prev?.filter(o => o.id !== orderId) ?? []);
-    console.log(`🗑️ 注文ID ${orderId} を削除しました`);
+    setOrders((prev) => prev.filter((o) => o.id !== orderId));
   }, []);
 
   /** ステータス変更 */
-  const changeOrderStatus = useCallback((id: number) => {
-    setOrders(prev =>
-      prev
-        .map(order => {
-          if (order.id === id) {
-            const nextStatus = getOrderStatus(order.status);
-            if (nextStatus > 3) return null;
-            return { ...order, status: nextStatus };
-          }
-          return order;
-        })
-        .filter((o): o is Order => o !== null)
-    );
-  }, []);
+  const changeOrderStatus = useCallback(
+    async (id: number) => {
+      // 現在のステータスを探す
+      const targetOrder = orders.find((o) => o.id === id);
+      if (!targetOrder) return;
 
-  /** 1分ごとに再描画 */
-  useEffect(() => {
-    const interval = setInterval(() => setOrders(prev => [...prev]), 60000);
-    return () => clearInterval(interval);
-  }, []);
+      // 次のステータスを決定 (0→1→2→3)
+      // OrderStatusの定義: 0:注文受付, 1:調理中, 2:調理完了, 3:提供済み
+      const nextStatusVal = (targetOrder.status + 1) as OrderStatus;
+      if (nextStatusVal > 3) return; // これ以上進まない
+
+      // 楽観的UI更新（APIを待たずに画面だけ先に変える）
+      setOrders((prev) =>
+        prev.map((o) => (o.id === id ? { ...o, status: nextStatusVal } : o))
+      );
+
+      // APIに送信するための文字列に変換
+      // backendapi.tsx の updateOrderStatus は string のステータスを期待しているため
+      const STATUS_STRINGS: Record<number, ApiOrderStatus> = {
+        0: "注文受付",
+        1: "調理中",
+        2: "提供済み", // もしバックエンドに「調理完了」がないなら、ここを調整
+        3: "提供済み", // 「会計済み」はKDSからは送らない（顧客側でやる）ため「提供済み」で止める
+      };
+
+      // バックエンドが "調理完了" ステータスを持っていない場合、
+      // Frontendの "2" は "調理中" のままにするか、"提供済み" にするか決める必要があります。
+      // ここでは便宜上、バックエンドAPIに合わせて文字列を送ります。
+      let statusToSend: ApiOrderStatus = "調理中";
+      if (nextStatusVal === 3) statusToSend = "提供済み";
+      else if (nextStatusVal === 1 || nextStatusVal === 2)
+        statusToSend = "調理中";
+
+      try {
+        await updateOrderStatus(id.toString(), statusToSend);
+        // 成功したらリロードして最新状態と同期（念のため）
+        loadOrders();
+      } catch (err) {
+        console.error("ステータス更新失敗", err);
+        // 失敗したら元に戻す処理などを入れるのが理想
+        loadOrders(); // リロードして正しい状態に戻す
+      }
+    },
+    [orders, loadOrders]
+  );
 
   /** ステータス別にグループ化 */
   const groupedOrders: GroupedOrders = useMemo(() => {
@@ -123,5 +163,16 @@ export const useOrders = (tableNumber?: string) => {
     }, {} as GroupedOrders);
   }, [orders]);
 
-  return { orders, groupedOrders, loading, error,tableNumber,tableNumbers,selectedTable,setSelectedTable,changeOrderStatus, deleteOrder };
+  return {
+    orders,
+    groupedOrders,
+    loading,
+    error,
+    tableNumber,
+    tableNumbers,
+    selectedTable,
+    setSelectedTable,
+    changeOrderStatus,
+    deleteOrder,
+  };
 };
