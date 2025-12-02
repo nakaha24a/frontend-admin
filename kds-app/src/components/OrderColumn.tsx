@@ -12,8 +12,10 @@ interface OrderColumnProps {
   onDelete: (orderId: number) => void;
 }
 
-const OrderColumn: React.FC<OrderColumnProps> = ({ title, orders, onStatusChange,onDelete}) => {
+const OrderColumn: React.FC<OrderColumnProps> = ({ title, orders,onStatusChange,onDelete}) => {
+  console.log('OrderColumn orders:', orders);
   return (
+    
     <div style={{ flexShrink: 0, width: '300px', padding: '10px', border: '1px solid #eee', backgroundColor: '#f9f9f9' }}>
       <h2 style={{ fontSize: '1.2em', borderBottom: '2px solid #333', paddingBottom: '5px' }}>
         {title} ({orders.length})
@@ -23,13 +25,20 @@ const OrderColumn: React.FC<OrderColumnProps> = ({ title, orders, onStatusChange
           <OrderCard 
             key={order.id}
             order={order}
+            
             onStatusChange={onStatusChange} 
             onDelete={onDelete}
                   />
+            
         ))}
+        
       </div>
+        
     </div>
   );
+  
 };
+
+
 
 export default OrderColumn;

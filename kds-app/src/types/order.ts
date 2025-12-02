@@ -1,13 +1,21 @@
 // import db from '../data-source.tsx';
 
 export type OrderStatus = 0 | 1 | 2 | 3; // 0:受取, 1:調理中, 2:完了, 3:提供済
-export type ApiOrderStatus = "調理中" | "提供済み" | "会計済み" | "キャンセル" | "注文受付";
+export type ApiOrderStatus = "調理中" | "提供済み" | "会計済み" | "キャンセル" | "注文受付"| "調理完了";
+
+export interface OrderItem {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  selectedOptions?: any[];
+}
 
 export interface Order {
   id: number;
   table: string;
   status: OrderStatus;
-  items: string[];
+  items: OrderItem[];
   time: Date;
 }
 
@@ -15,16 +23,19 @@ export interface Order {
 export const STATUS_MAP_TO_API: Record<OrderStatus, ApiOrderStatus> = {
     0: "注文受付", 
     1: "調理中",
-    2: "提供済み",
-    3: "会計済み", 
+    2: "調理完了",
+    3: "提供済み",
+    
 };
 
 export const STATUS_MAP_FROM_API: Record<ApiOrderStatus, OrderStatus> = {
     "注文受付": 0,
     "調理中": 1,
-    "提供済み": 2, // APIから取得できるのは基本的に調理中(1)か提供済み(2)
+    "調理完了": 2,
+    "提供済み": 3, // APIから取得できるのは基本的に調理中(1)か提供済み(2)
     "会計済み": 3,
-    "キャンセル": 3, // キャンセルも完了(3)として扱う
+    "キャンセル": 3,
+    
 };
 
 // 次の数値ステータスを取得する関数

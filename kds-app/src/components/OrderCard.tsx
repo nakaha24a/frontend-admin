@@ -28,6 +28,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onStatusChange ,onDelete})
   const isAlert = order.status === 1 && elapsedMinutes > 15;
   const timeColor = isAlert ? 'red' : '#666';
 
+  console.log('OrderCard order:', order);
   return (
     <div className={`order-card status-${order.status}`} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold' }}>
@@ -38,7 +39,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onStatusChange ,onDelete})
       </div>
       <ul style={{ listStyleType: 'none', padding: 0 }}>
         {order.items.map((item, index) => (
-          <li key={index} style={{ fontSize: '0.9em' }}>• {item}</li>
+          <li key={index} style={{ fontSize: '0.9em' }}>• {item.name} × {item.quantity}</li>
         ))}
       </ul>
       

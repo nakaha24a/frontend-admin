@@ -3,11 +3,13 @@ import type { MenuResponse } from "../types/menu";
  
 // サーバーから返される注文オブジェクトの型定義
 export interface KitchenOrder {
+  
   id: number;
-  table_number: string; // ★ 修正: DBに合わせて string に変更
+  table_number: string; 
   items: string;
   status: "注文受付" | "提供済み";
-  timestamp: string;
+  time: string;
+  timestamp: string | number | Date;
 }
  
 export interface Menu {
@@ -20,7 +22,7 @@ export interface Menu {
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
  
 
-/* キッチン用の注文リスト（調理中、提供済み）をサーバーから取得する */
+/* キッチン用の注文リスト（注文受付、提供済み）をサーバーから取得する */
 export async function fetchKitchenOrders(): Promise<KitchenOrder[]> {
   const url = `${API_BASE_URL}/api/kitchen/orders`;
  
@@ -82,6 +84,8 @@ export async function updateOrderStatus(
 /**
  * 特定テーブルの注文を取得
  */
+
+
 export async function fetchOrdersByTable(tableNumber: string): Promise<Order[]> {
   const url = `${API_BASE_URL}/api/orders?tableNumber=${tableNumber}`;
  
@@ -99,6 +103,7 @@ export async function fetchOrdersByTable(tableNumber: string): Promise<Order[]> 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const apiOrders: any[] = await res.json();
  
+    console.log("APIから取得した生データ:", apiOrders);
     // APIの文字列ステータス → 内部OrderStatusに変換
     return apiOrders.map(o => ({
       id: o.id,
@@ -135,7 +140,6 @@ export async function fetchOrderTableNumber(tableNumber: string): Promise<Order[
   const apiOrders: any[] = await res.json();
   return apiOrders.map((o) => ({
     id: o.id,
-    // ★ 修正: ここも table_number をそのまま使う
     table: o.table_number.toString(),
     status: STATUS_MAP_FROM_API[o.status as ApiOrderStatus],
     items: Array.isArray(o.items) ? o.items : JSON.parse(o.items || "[]"),
@@ -143,6 +147,8 @@ export async function fetchOrderTableNumber(tableNumber: string): Promise<Order[
   })) as Order[];
 }
  
+// メニュー　API
+
 export const fetchMenuList = async (): Promise<MenuResponse> => {
   const res = await fetch(`${API_BASE_URL}/api/menu`);
   if (!res.ok) {

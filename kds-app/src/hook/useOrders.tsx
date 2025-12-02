@@ -1,8 +1,9 @@
+//useOrder.tsx
 
 import { useState, useCallback, useMemo, useEffect } from 'react';
-import type { Order, ApiOrderStatus, GroupedOrders } from '../types/order';
+import type { Order, ApiOrderStatus, GroupedOrders, OrderStatus } from '../types/order';
 import {fetchOrdersByTable,fetchTableNumbers} from '../api/backendapi';
-import {STATUS_MAP_FROM_API, getOrderStatus} from '../types/order';
+import { getOrderStatus} from '../types/order';
 
 
 /* 仮の初期データ
@@ -20,7 +21,7 @@ export interface ApiOrder {
   table: string;
   status: ApiOrderStatus; // "調理中" | "提供済み" | "会計済み" | "キャンセル" | "新規受付"
   items: string[];        // DBでJSON文字列の場合はJSON.parseが必要
-  timestamp: string;      // ISO文字列
+  time: string;      // ISO文字列
 }
 
 
@@ -58,15 +59,27 @@ export const useOrders = (tableNumber?: string) => {
     setLoading(true);
     fetchOrdersByTable(tableNumber)
       .then(fetchedOrders => {
+        const STATUS_MAP_FROM_API: Record<string, OrderStatus> = {
+        "注文受付": 0,
+        "調理中": 1,
+        "調理完了":2,
+        "提供済み": 3,
+        "会計済み": 3,
+        };
+        console.log('fetchedOrders raw:', fetchedOrders);
+
         const convertedOrders: Order[] = fetchedOrders.map(o => ({
+          
           id: o.id,
           table: o.table,
           status: STATUS_MAP_FROM_API[o.status as unknown as ApiOrderStatus],
-          items: o.items,
+          items: Array.isArray(o.items) ? o.items : JSON.parse(o.items),
           time: new Date(o.time),
         }));
         setOrders(convertedOrders);
+        console.log('convertedOrders:', convertedOrders);
       })
+      
       .catch(err => setError((err as Error).message))
       .finally(() => setLoading(false));
   }, [tableNumber]);
