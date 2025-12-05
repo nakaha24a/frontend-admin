@@ -1,79 +1,94 @@
+import React from "react";
 
-import { useNavigate } from 'react-router-dom';
-import {type KitchenOrder,fetchKitchenOrders} from '../api/backendapi.tsx';
-
-
-function TopPage() {
-   
-  const navigate = useNavigate();
-
-  return (
-    <><div className="top-page" >
-          <h1 className="top-h1">飲食店注文管理システム</h1>
-          <div className="button-container" >
-              <button className="button"
-                 
-                  onClick={() => navigate("/orders")}
-              >
-                  注文受取画面
-              </button>
-              <button className="button"
-                  
-                  onClick={() => navigate("/menu")}
-              >
-                  メニュー編集画面
-              </button>
-          </div>
-          <footer className="top-footer">
-            &copy; 2025 飲食店管理システム
-          </footer>
-      </div></>
-  );
-   
-
+// ★ この型定義を追加することで App.tsx のエラーが消えます
+interface TopPageProps {
+  onNavigateOrder: () => void;
+  onNavigateMenu: () => void;
 }
+
+const TopPage: React.FC<TopPageProps> = ({
+  onNavigateOrder,
+  onNavigateMenu,
+}) => {
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#f3f4f6",
+        padding: "20px",
+      }}
+    >
+      <div
+        style={{
+          backgroundColor: "white",
+          padding: "40px",
+          borderRadius: "8px",
+          boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+          textAlign: "center",
+          maxWidth: "400px",
+          width: "100%",
+        }}
+      >
+        {/* 不要な (KDS) を削除 */}
+        <h1
+          style={{
+            fontSize: "24px",
+            fontWeight: "bold",
+            marginBottom: "30px",
+            color: "#333",
+          }}
+        >
+          店舗管理
+        </h1>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+          <button
+            onClick={onNavigateOrder}
+            style={{
+              backgroundColor: "#2563eb",
+              color: "white",
+              padding: "15px",
+              borderRadius: "8px",
+              border: "none",
+              fontSize: "18px",
+              fontWeight: "bold",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "10px",
+            }}
+          >
+            <span>🍳 注文管理画面</span>
+          </button>
+
+          <button
+            onClick={onNavigateMenu}
+            style={{
+              backgroundColor: "#16a34a",
+              color: "white",
+              padding: "15px",
+              borderRadius: "8px",
+              border: "none",
+              fontSize: "18px",
+              fontWeight: "bold",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "10px",
+            }}
+          >
+            <span>📝 メニュー管理画面</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default TopPage;
-
-  
-
-async function loadAndDisplayKitchenOrders() {
-    const listContainer = document.getElementById('kitchen-order-list');
-    if (!listContainer) return; // 表示する要素がない場合は終了
-
-    listContainer.innerHTML = '<li>読み込み中...</li>'; // ロード表示
-
-    try {
-        // ① API関数を呼び出し、サーバーから非同期でデータを取得
-        // 戻り値は KitchenOrder[] 型として受け取る
-        const orders: KitchenOrder[] = await fetchKitchenOrders();
-
-        // ② 取得したデータを処理・利用
-        console.log('取得した注文データ:', orders);
-
-        if (orders.length === 0) {
-            listContainer.innerHTML = '<li>現在、調理中の注文はありません。</li>';
-            return;
-        }
-        
-        // ③ データをHTMLに整形して表示（例）
-        const htmlContent = orders.map(order => {
-            return `
-                <li data-order-id="${order.id}">
-                    **卓番号: ${order.table_number}** / 状態: ${order.status}
-                    <br>注文時刻: ${new Date(order.timestamp).toLocaleTimeString()}
-                </li>
-            `;
-        }).join('');
-        
-        listContainer.innerHTML = htmlContent;
-
-    } catch (error) {
-        // ④ エラー処理
-        console.error('注文リストの取得中にエラーが発生しました:', error);
-        listContainer.innerHTML = '<li>データの取得に失敗しました。サーバーを確認してください。</li>';
-    }
-}
-
-// ページ読み込み完了時やボタンクリック時などに実行
-loadAndDisplayKitchenOrders();

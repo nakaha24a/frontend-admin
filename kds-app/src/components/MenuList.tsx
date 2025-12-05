@@ -34,7 +34,7 @@ export const MenuList: React.FC<Props> = ({ menus, reload }) => {
   };
 
   return (
-    <table className="menu-table" border={1} >
+    <table className="menu-table" border={1}>
       <thead>
         <tr>
           <th>ID</th>

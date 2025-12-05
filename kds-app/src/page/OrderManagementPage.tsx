@@ -1,59 +1,123 @@
-import React from "react";
+// src/page/OrderManagementPage.tsx
+
+import React, { useState } from "react";
 import OrderBoard from "../components/OrderBoard";
 import { useOrders } from "../hook/useOrders";
 
-const OrderManagementPage: React.FC = () => {
-  // 引数なし = キッチンモード（全注文取得）
+interface OrderManagementPageProps {
+  onBack: () => void;
+}
+
+const OrderManagementPage: React.FC<OrderManagementPageProps> = ({
+  onBack,
+}) => {
+  const [selectedTable, setSelectedTable] = useState<string>("");
+
   const {
     groupedOrders,
     loading,
     error,
     changeOrderStatus,
     deleteOrder,
-    selectedTable, // 特定のテーブルを見たい場合のUIがあれば使う
-    setSelectedTable, // 同上
-    tableNumbers, // 同上
-  } = useOrders();
-
-  if (loading && Object.keys(groupedOrders).length === 0) {
-    return <div className="p-4">読み込み中...</div>;
-  }
-
-  if (error) {
-    return <div className="p-4 text-red-500">エラー: {error}</div>;
-  }
+    tableNumbers,
+  } = useOrders(selectedTable);
 
   return (
-    <div className="order-management-page h-screen flex flex-col">
-      <header className="bg-gray-800 text-white p-4 flex justify-between items-center shadow-md">
-        <h1 className="text-xl font-bold">
-          キッチンディスプレイ (KDS)
-          {/* 開発用: 接続先確認 */}
-          <span className="text-xs ml-4 font-normal text-gray-400">
-            Server: {import.meta.env.VITE_API_BASE_URL}
-          </span>
-        </h1>
+    <div style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
+      {/* ヘッダー */}
+      <header
+        style={{
+          backgroundColor: "#1f2937",
+          color: "white",
+          padding: "1rem",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          {/* 戻るボタン */}
+          <button
+            onClick={onBack}
+            style={{
+              backgroundColor: "#4b5563",
+              color: "white",
+              padding: "0.5rem 1rem",
+              borderRadius: "0.25rem",
+              border: "none",
+              cursor: "pointer",
+              fontWeight: "bold",
+            }}
+          >
+            ← トップへ
+          </button>
+          <h1 style={{ fontSize: "1.25rem", fontWeight: "bold", margin: 0 }}>
+            キッチンディスプレイ
+          </h1>
+        </div>
 
-        {/* 必要であればここにテーブルフィルタ用のドロップダウンを配置 */}
-        {/* <select 
-          className="text-black p-1 rounded"
-          onChange={(e) => setSelectedTable(e.target.value)}
-          value={selectedTable || ""}
-        >
-          <option value="">全テーブル表示</option>
-          {tableNumbers.map(num => (
-            <option key={num} value={num}>Table {num}</option>
-          ))}
-        </select>
-        */}
+        {/* ドロップダウン */}
+        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <label
+            htmlFor="table-select"
+            style={{ fontSize: "0.9rem", fontWeight: "bold" }}
+          >
+            表示:
+          </label>
+          <select
+            id="table-select"
+            onChange={(e) => setSelectedTable(e.target.value)}
+            value={selectedTable}
+            style={{
+              padding: "0.3rem",
+              borderRadius: "0.25rem",
+              color: "black",
+              border: "1px solid #ccc",
+            }}
+          >
+            <option value="">全テーブル (一括)</option>
+            {tableNumbers.map((num) => (
+              <option key={num} value={num}>
+                Table {num}
+              </option>
+            ))}
+          </select>
+        </div>
       </header>
 
-      <div className="flex-1 overflow-auto p-4 bg-gray-100">
-        <OrderBoard
-          orders={groupedOrders}
-          onStatusChange={changeOrderStatus}
-          onDelete={deleteOrder}
-        />
+      {/* メインエリア */}
+      <div
+        style={{
+          flex: 1,
+          overflow: "auto",
+          padding: "1rem",
+          backgroundColor: "#f3f4f6",
+        }}
+      >
+        {loading && Object.keys(groupedOrders).length === 0 && !error ? (
+          <div style={{ textAlign: "center", padding: "2rem", color: "#666" }}>
+            注文を読み込んでいます...
+          </div>
+        ) : error ? (
+          <div
+            style={{
+              padding: "1rem",
+              color: "#dc2626",
+              backgroundColor: "white",
+              borderRadius: "0.5rem",
+              boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
+            }}
+          >
+            エラーが発生しました: {error}
+          </div>
+        ) : (
+          <OrderBoard
+            orders={groupedOrders}
+            onStatusChange={changeOrderStatus}
+            onDelete={deleteOrder}
+          />
+        )}
       </div>
     </div>
   );
