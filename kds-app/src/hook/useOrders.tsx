@@ -18,8 +18,8 @@ const STATUS_MAP: Record<string, OrderStatus> = {
   調理完了: 2,
   提供済み: 3,
   会計済み: 3,
-  KDS完了: 4, // 画面から消えるステータス
-  呼び出し: 0,
+  KDS完了: 4,
+  呼び出し: 5, // ★ 修正: 呼び出しを独立させる
 };
 
 export const useOrders = (tableNumber?: string) => {
@@ -56,6 +56,7 @@ export const useOrders = (tableNumber?: string) => {
         } else if (typeof o.status === "string") {
           statusVal = STATUS_MAP[o.status] ?? 0;
         }
+
         return {
           id: o.id,
           table: o.table_number || o.table || "不明",
@@ -84,12 +85,14 @@ export const useOrders = (tableNumber?: string) => {
 
   const deleteOrder = useCallback(
     async (orderId: number) => {
-      // 削除ボタン(=強制完了)でもサーバー上のステータスを更新する
+      // 画面から消しつつ、サーバーに完了を通知
+      setOrders((prev) => prev.filter((o) => o.id !== orderId));
       try {
         await updateOrderStatus(orderId.toString(), "KDS完了");
         loadOrders();
       } catch (err) {
-        console.error("削除失敗", err);
+        console.error("完了処理失敗", err);
+        loadOrders();
       }
     },
     [loadOrders]
@@ -100,22 +103,18 @@ export const useOrders = (tableNumber?: string) => {
       const targetOrder = orders.find((o) => o.id === id);
       if (!targetOrder) return;
 
-      // 次のステータスへ (0->1->2->3->4)
       const nextStatusVal = (targetOrder.status + 1) as OrderStatus;
+      // 呼び出し(5)や完了(4)の場合はこれ以上進めない
+      if (nextStatusVal > 3 && targetOrder.status !== 5) return;
 
-      // 4(KDS完了)以上になってもOK（サーバーから消えるだけ）
-
-      // 楽観的更新
       setOrders((prev) =>
         prev.map((o) => (o.id === id ? { ...o, status: nextStatusVal } : o))
       );
 
-      // API用文字列
       let statusToSend: ApiOrderStatus = "注文受付";
       if (nextStatusVal === 1) statusToSend = "調理中";
       else if (nextStatusVal === 2) statusToSend = "調理完了";
       else if (nextStatusVal === 3) statusToSend = "提供済み";
-      else if (nextStatusVal >= 4) statusToSend = "KDS完了"; // これでリストから消える
 
       try {
         await updateOrderStatus(id.toString(), statusToSend);
@@ -131,8 +130,8 @@ export const useOrders = (tableNumber?: string) => {
   const groupedOrders: GroupedOrders = useMemo(() => {
     return orders.reduce((acc, order) => {
       const key = order.status;
-      // ステータス4(完了)は表示リストに入れない
-      if (key >= 4) return acc;
+      // KDS完了(4)は表示しない
+      if (key === 4) return acc;
 
       if (!acc[key]) acc[key] = [];
       acc[key].push(order);

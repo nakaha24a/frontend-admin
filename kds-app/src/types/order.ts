@@ -1,13 +1,14 @@
 export interface OrderItem {
   name: string;
   quantity: number;
-  // ...
+  options?: any[];
+  price?: number;
+  totalPrice?: number;
 }
 
-// ステータスID: 0:受付, 1:調理中, 2:調理完了, 3:提供済み, 4:KDS完了(非表示)
-export type OrderStatus = 0 | 1 | 2 | 3 | 4;
+// 0:受付, 1:調理中, 2:調理完了, 3:提供済み, 4:KDS完了(非表示), 5:呼び出し
+export type OrderStatus = 0 | 1 | 2 | 3 | 4 | 5;
 
-// APIでやり取りする文字列
 export type ApiOrderStatus =
   | "注文受付"
   | "調理中"

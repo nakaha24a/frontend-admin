@@ -1,5 +1,5 @@
 import React from "react";
-import type { GroupedOrders, OrderStatus } from "../types/order.ts";
+import type { GroupedOrders, OrderStatus } from "../types/order";
 import OrderColumn from "./OrderColumn";
 
 interface OrderBoardProps {
@@ -10,12 +10,14 @@ interface OrderBoardProps {
 
 const getColumnTitle = (status: OrderStatus): string => {
   switch (status) {
+    case 5:
+      return "🔔 スタッフ呼び出し"; // 追加
     case 0:
       return "注文受付";
     case 1:
       return "調理中";
     case 2:
-      return "調理完了 (提供待ち)"; // ここで止まる
+      return "調理完了 (提供待ち)";
     case 3:
       return "提供済み";
     default:
@@ -23,8 +25,8 @@ const getColumnTitle = (status: OrderStatus): string => {
   }
 };
 
-// 表示するカラムのリスト (4:KDS完了 は表示しないので含めない)
-const STATUSES: readonly OrderStatus[] = [0, 1, 2, 3];
+// 5(呼び出し) を先頭に追加
+const STATUSES: readonly OrderStatus[] = [5, 0, 1, 2, 3];
 
 const OrderBoard: React.FC<OrderBoardProps> = ({
   orders,
