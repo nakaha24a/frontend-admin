@@ -10,6 +10,11 @@ export default defineConfig({
     "process.arch": '"x64"',
     "process.versions": '{}',
     build: { ssr: false },
+  },
+  server:{
+    proxy:{
+         "/api": "http://172.16.31.18:5000",
+    }
   }
 })
 
