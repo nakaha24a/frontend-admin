@@ -18,6 +18,7 @@ a {
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
 }
@@ -39,7 +40,7 @@ body {
     padding: 20px;
     max-width: 1200px;
     margin: 0 auto; 
-    height: 300vh;
+    
 }
 
 /* --- ヘッダーとボタンの基本スタイル --- */
@@ -124,6 +125,7 @@ body {
     gap: 10px;
     padding: 10px;
     overflow-x: auto; /* PC/広い画面では横スクロールを許可 */
+    overflow-y: auto;
 }
 
 /* --- 3. カラムの基本スタイル --- */
@@ -198,12 +200,12 @@ body {
 }
 
 /* --- 5. レスポンシブ対応 (メディアクエリ) --- */
-@media (max-width: 800px) {
+@media (max-width: 1000px) {
     /* ボード全体を縦方向に変更 */
     .kds-board {
         flex-direction: column;
         gap: 15px;
-        overflow-x: hidden;
+        overflow-x: auto;
     }
 
     /* カラムを画面いっぱいに広げる */
@@ -214,6 +216,8 @@ body {
     /* ページ左右のパディングを減らす */
     .kds-page-container {
         padding: 10px;
+        height: calc(100vh - 50px);
+        overflow-y: auto;
     }
 }
 
@@ -319,6 +323,7 @@ body {
 html, body, #root {
   width: 100%;
   height: 100%;
+  overflow-y: hidden;
   margin: 0;
   padding: 0;
 }
