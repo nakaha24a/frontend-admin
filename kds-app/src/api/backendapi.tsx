@@ -1,3 +1,6 @@
+// src/api/backendapi.tsx
+// (全体をこれに書き換えてください)
+
 import type { ApiOrderStatus, Order } from "../types/order";
 import type { MenuResponse, Menu } from "../types/menu";
 
@@ -5,13 +8,12 @@ export interface KitchenOrder {
   id: number;
   table_number: string;
   items: string;
-  // ★ 修正: 文字列リテラル型を広げるか、stringにします
   status: ApiOrderStatus;
   time: string;
   timestamp: string | number | Date;
 }
 
-// 環境変数
+// 環境変数 (ここは .env の設定、つまり ...16:3000 が使われます)
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
 
@@ -67,10 +69,10 @@ export const fetchMenuList = async (): Promise<MenuResponse> => {
   return res.json();
 };
 
+// ★ここが修正ポイントです (/admin を削除)
 export const createMenu = async (menu: Menu): Promise<void> => {
- 
-
-  const res = await fetch(`${API_BASE_URL}/api/admin/menu`, {
+  // 修正後: /api/menu
+  const res = await fetch(`${API_BASE_URL}/api/menu`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(menu),
@@ -78,11 +80,13 @@ export const createMenu = async (menu: Menu): Promise<void> => {
   if (!res.ok) throw new Error("メニュー作成失敗");
 };
 
+// ★ここも修正ポイントです (/admin を削除)
 export const updateMenu = async (
   id: string,
   menu: Partial<Menu>
 ): Promise<void> => {
-  const res = await fetch(`${API_BASE_URL}/api/admin/menu/${id}`, {
+  // 修正後: /api/menu/${id}
+  const res = await fetch(`${API_BASE_URL}/api/menu/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(menu),
@@ -90,8 +94,10 @@ export const updateMenu = async (
   if (!res.ok) throw new Error("メニュー更新失敗");
 };
 
+// ★ここも修正ポイントです (/admin を削除)
 export const deleteMenu = async (id: string): Promise<void> => {
-  const res = await fetch(`${API_BASE_URL}/api/admin/menu/${id}`, {
+  // 修正後: /api/menu/${id}
+  const res = await fetch(`${API_BASE_URL}/api/menu/${id}`, {
     method: "DELETE",
   });
   if (!res.ok) throw new Error("メニュー削除失敗");
