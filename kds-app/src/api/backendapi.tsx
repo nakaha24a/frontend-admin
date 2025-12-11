@@ -61,12 +61,15 @@ export async function fetchTableNumbers(): Promise<string[]> {
 
 // メニュー関連
 export const fetchMenuList = async (): Promise<MenuResponse> => {
+
   const res = await fetch(`${API_BASE_URL}/api/menu`);
   if (!res.ok) throw new Error("メニュー一覧取得失敗");
   return res.json();
 };
 
 export const createMenu = async (menu: Menu): Promise<void> => {
+ 
+
   const res = await fetch(`${API_BASE_URL}/api/admin/menu`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

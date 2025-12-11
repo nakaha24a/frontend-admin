@@ -11,10 +11,6 @@ export default defineConfig({
     "process.versions": '{}',
     build: { ssr: false },
   },
-  server:{
-    proxy:{
-         "/api": "http://172.16.31.18:5000",
-    }
-  }
+  
 })
 
