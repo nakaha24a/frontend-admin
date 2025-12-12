@@ -449,3 +449,43 @@ html, body, #root {
     padding-right: 0;
     margin-bottom: 5px;
 }
+
+/* キャンセルボタン (デフォルト/セカンダリ) */
+.modal-actions button:first-of-type {
+    background-color: #ccc;
+    color: #333;
+    border-color: #bbb;
+}
+.modal-actions button:first-of-type:hover {
+    background-color: #bbb;
+}
+
+
+.modal-button {
+  padding: 6px 12px;
+  margin-right: 6px;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+/* 保存ボタン (プライマリ/成功) */
+.modal-actions .modal-save {
+    background-color: #28a745;
+    color: white;
+}
+.modal-actions .modal-save:hover {
+    background-color: #1e7e34;
+}
+
+/* 削除ボタン (危険色) */
+.modal-actions .modal-delete {
+    background-color: #dc3545;
+    color: white;
+}
+.modal-actions .modal-delete:hover {
+    background-color: #c82333;
+}

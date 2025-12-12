@@ -9,7 +9,7 @@ interface Props {
   onDelete: () => Promise<void>;                  // 親でAPI呼び出し
 }
 
-export const MenuEdit: React.FC<Props> = ({ menu, onClose, onSave, onDelete }) => {
+export const MenuEdit: React.FC<Props> = ({ menu, onClose, onSave }) => {
   if (!menu) return null;
 
   const [form, setForm] = useState({
@@ -89,12 +89,7 @@ export const MenuEdit: React.FC<Props> = ({ menu, onClose, onSave, onDelete }) =
           >
             保存
           </button>
-          <button className="modal-button modal-delete"
-            onClick={() => onDelete().then(onClose)}
-            style={{ color: "red" }}
-          >
-            削除
-          </button>
+          
         </div>
       </div>
     </div>
