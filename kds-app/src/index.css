@@ -395,6 +395,8 @@ html, body, #root {
   background: white;
   padding: 20px;
   border-radius: 6px;
+  max-height: 90vh; /* ビューポートの高さの90%までを最大とする */
+  overflow-y: auto; /* 高さが超えた場合、縦スクロールを有効にする */
 }
 
 .modal-actions {
@@ -402,4 +404,48 @@ html, body, #root {
   justify-content: flex-end;
   gap: 10px;
   margin-top: 15px;
+}
+
+/* --- MenuEdit モーダル内のフォーム要素の整理 (コンパクト版) --- */
+.modal-form-group {
+    display: flex;        /* ラベルと入力欄を横並びに */
+    align-items: center;  /* 垂直方向中央揃え */
+    margin-bottom: 10px;  /* 各行間のスペースを調整 */
+}
+
+.modal-form-group label {
+    flex-basis: 80px;     /* ラベルの幅を固定 */
+    flex-shrink: 0;       
+    margin-top: 0;        
+    margin-bottom: 0;
+    font-weight: bold;
+    color: #333;
+    font-size: 0.95em;
+    text-align: right;    /* ラベルを右揃えに */
+    padding-right: 15px;  /* スペース */
+}
+
+.modal-form-group input,
+.modal-form-group textarea {
+    flex-grow: 1;         /* 入力欄が残りのスペースをすべて占有 */
+    width: auto;          
+    padding: 8px 10px;    /* パディングを調整 */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 0;
+    font-size: 0.9em;     /* フォントサイズを小さく */
+}
+
+/* 説明欄 (textarea) は単独で一行占有させるための調整 */
+.modal-form-group.full-width-input {
+    flex-direction: column;
+    align-items: flex-start;
+}
+.modal-form-group.full-width-input label {
+    flex-basis: auto;
+    width: 100%;
+    text-align: left;
+    padding-right: 0;
+    margin-bottom: 5px;
 }

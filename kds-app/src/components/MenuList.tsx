@@ -59,7 +59,7 @@ export const MenuList: React.FC = () => {
 
   return (
     <>
-      <table border={1}>
+      <table className="menu-table">
         <thead>
           <tr>
             <th>ID</th>

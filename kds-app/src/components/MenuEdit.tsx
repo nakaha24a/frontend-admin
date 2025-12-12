@@ -32,41 +32,51 @@ export const MenuEdit: React.FC<Props> = ({ menu, onClose, onSave, onDelete }) =
       <div className="modal-box" onClick={(e) => e.stopPropagation()}>
         <h2>メニュー編集</h2>
 
-        <label>名前</label>
-        <input name="name" value={form.name} onChange={handleChange} />
+        <div className="modal-form-group">
+          <label>名前</label>
+          <input name="name" value={form.name} onChange={handleChange} />
+        </div>
 
-        <label>価格</label>
-        <input
-          name="price"
-          type="number"
-          value={form.price}
-          onChange={handleChange}
-        />
+        <div className="modal-form-group">
+          <label>価格</label>
+          <input
+            name="price"
+            type="number"
+            value={form.price}
+            onChange={handleChange}
+          />
+        </div>
 
-        <label>説明</label>
-        <textarea
-          name="description"
-          value={form.description}
-          onChange={handleChange}
-        />
+        <div className="modal-form-group">
+          <label>説明</label>
+          <textarea
+            name="description"
+            value={form.description}
+            onChange={handleChange}
+          />
+        </div>
 
-        <label>カテゴリ</label>
-        <input
-          name="category"
-          value={form.category}
-          onChange={handleChange}
-        />
+        <div className="modal-form-group">
+          <label>カテゴリ</label>
+          <input
+            name="category"
+            value={form.category}
+            onChange={handleChange}
+          />
+        </div>
 
-        <label>画像URL</label>
-        <input
-          name="imageUrl"
-          value={form.imageUrl}
-          onChange={handleChange}
-        />
+        <div className="modal-form-group">
+          <label>画像URL</label>
+          <input
+            name="imageUrl"
+            value={form.imageUrl}
+            onChange={handleChange}
+          />
+        </div>
 
         <div className="modal-actions">
-          <button onClick={onClose}>キャンセル</button>
-          <button
+          <button className="modal-button" onClick={onClose}>キャンセル</button>
+          <button className="modal-button modal-save"
             onClick={() =>
               onSave({
                 name: form.name,
@@ -79,7 +89,7 @@ export const MenuEdit: React.FC<Props> = ({ menu, onClose, onSave, onDelete }) =
           >
             保存
           </button>
-          <button
+          <button className="modal-button modal-delete"
             onClick={() => onDelete().then(onClose)}
             style={{ color: "red" }}
           >
