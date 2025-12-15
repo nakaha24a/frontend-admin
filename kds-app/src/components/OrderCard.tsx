@@ -1,3 +1,4 @@
+// src/components/OrderCard.tsx
 import React from "react";
 // 型のみインポート
 import type { Order } from "../types/order";

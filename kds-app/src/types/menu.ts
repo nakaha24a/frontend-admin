@@ -1,3 +1,4 @@
+// types/menu.ts
 export interface Menu {
   id: string;
   name: string;

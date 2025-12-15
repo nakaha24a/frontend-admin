@@ -1,19 +1,36 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// page/MenuManagementPage.tsx
 import React, { useEffect, useState } from "react";
 import type { Menu, MenuResponse } from "../types/menu.ts";
 import { fetchMenuList } from "../api/backendapi.tsx";
-import { MenuForm } from "../components/MenuForm.tsx";
 import { MenuList } from "../components/MenuList.tsx";
+import { MenuModal } from "../components/MenuAdd.tsx"; // モーダルを追加
 
 export const MenuManagementPage: React.FC = () => {
   const [menus, setMenus] = useState<Menu[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false); // モーダル管理
 
   const loadMenus = async () => {
     setLoading(true);
     try {
       const data: MenuResponse = await fetchMenuList();
-      const flatMenus: Menu[] = data.categories.flatMap((cat) => cat.items);
+
+      
+
+      const flatMenus: Menu[] = data.categories.flatMap((cat) =>
+          cat.items.map((menu) => {
+            const filename = menu.image?.split("/").pop();
+            const safeFilename = filename ? filename.toLowerCase() : undefined;
+            return {
+              ...menu,
+              image: safeFilename ? `/assets/${safeFilename}` : undefined,
+            };
+          })
+      );
+
+
+      console.log("flatMenus:", flatMenus); // 確認用
       setMenus(flatMenus);
     } catch (err: any) {
       alert(err.message);
@@ -30,12 +47,35 @@ export const MenuManagementPage: React.FC = () => {
     <div style={{ padding: "20px" }}>
       <h1 style={{ color: "blue" }}>メニュー管理</h1>
 
-      <MenuForm onSuccess={loadMenus} />
+      {/* メニュー追加ボタン */}
+      <button
+        onClick={() => setIsAddModalOpen(true)}
+        style={{
+          marginBottom: "20px",
+          padding: "10px 15px",
+          backgroundColor: "#28a745",
+          color: "white",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+        }}
+      >
+        メニュー追加
+      </button>
 
       {loading ? (
         <p>読み込み中...</p>
       ) : (
         <MenuList menus={menus} reload={loadMenus} />
+      )}
+
+      {/* メニュー追加モーダル */}
+      {isAddModalOpen && (
+        <MenuModal
+          isOpen={isAddModalOpen}
+          onClose={() => setIsAddModalOpen(false)}
+          onSuccess={loadMenus} // 追加成功後に一覧更新
+        />
       )}
     </div>
   );

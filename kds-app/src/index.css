@@ -13,6 +13,16 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+}
+
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -27,8 +37,8 @@ a:hover {
 
 /* --- 0. 基本リセットとグローバルスタイル --- */
 body {
-    margin: 0;
-    padding: 0;
+    margin: 10;
+    padding: 10;
     background-color: #f4f4f4;
     box-sizing: border-box;
     height: 100%;
@@ -39,18 +49,31 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     padding: 20px;
     max-width: 1200px;
-    margin: 0 auto; 
-    
+    margin: auto; 
+    height: 100%;
+    overflow: hidden; 
 }
 
 /* --- ヘッダーとボタンの基本スタイル --- */
 .kds-header {
+    position: sticky;
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
     padding-bottom: 15px;
     border-bottom: 2px solid #ddd;
+    background: #fff;
+}
+
+/* --- 2. ボードのレイアウト (Flexbox/レスポンシブの核) --- */
+.kds-board {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    margin-top: 20px;
+    overflow-x: auto; /* PC/広い画面では横スクロールを許可 */
+    overflow-y: visible;
 }
 
 .add-order-button {
@@ -119,14 +142,7 @@ body {
     background-color: #0056b3;
 }
 
-/* --- 2. ボードのレイアウト (Flexbox/レスポンシブの核) --- */
-.kds-board {
-    display: flex;
-    gap: 10px;
-    padding: 10px;
-    overflow-x: auto; /* PC/広い画面では横スクロールを許可 */
-    overflow-y: auto;
-}
+
 
 /* --- 3. カラムの基本スタイル --- */
 .order-column {
@@ -221,112 +237,7 @@ body {
     }
 }
 
-/* MenuList 用テーブル */
-.menu-table {
-  width: 100%;
-  border-collapse: collapse; /* セルの境界線を重ねてスッキリさせる */
-  margin-top: 20px;
-  font-family: Arial, sans-serif;
-  background-color: #fff;
-}
 
-.menu-table th,
-.menu-table td {
-  border: 1px solid #ddd;
-  padding: 10px;
-  text-align: left;
-}
-
-.menu-table th {
-  background-color: #3498db;
-  color: #fff;
-  font-weight: bold;
-}
-
-.menu-table tr:nth-child(even) {
-  background-color: #f9f9f9; /* 偶数行を少し灰色に */
-}
-
-.menu-table tr:hover {
-  background-color: #f1f1f1; /* ホバー時にハイライト */
-}
-
-/* 操作ボタン */
-.menu-table button {
-  padding: 6px 12px;
-  margin-right: 6px;
-  border: none;
-  border-radius: 4px;
-  color: #fff;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.menu-table button:first-of-type {
-  background-color: #f39c12; /* 編集ボタンはオレンジ */
-}
-
-.menu-table button:first-of-type:hover {
-  background-color: #e67e22;
-}
-
-.menu-table button:last-of-type {
-  background-color: #e74c3c; /* 削除ボタンは赤 */
-}
-
-.menu-table button:last-of-type:hover {
-  background-color: #c0392b;
-}
-
-
-/* MenuForm 用スタイル */
-.menu-form {
-  display: flex;
-  flex-wrap: wrap; /* 小さい画面でも折り返す */
-  gap: 10px; /* 入力欄とボタンの間隔 */
-  margin-bottom: 1rem;
-  align-items: center;
-}
-
-.menu-form input {
-  padding: 8px 12px;
-  border: 0.5px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
-  flex: 1; /* 横幅を均等に広げる */
-  min-width: 120px; /* 最小幅を確保 */
-}
-
-.menu-form input:focus {
-  border-color: #3498db;
-  outline: none;
-  box-shadow: 0 0 3px rgba(52, 152, 219, 0.5);
-}
-
-.menu-form button {
-  padding: 8px 16px;
-  background-color: #2ecc71;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.menu-form button:hover {
-  background-color: #27ae60;
-}
-
-
-html, body, #root {
-  width: 100%;
-  height: 100%;
-  overflow-y: hidden;
-  margin: 0;
-  padding: 0;
-}
 
 
 /* Topページ全体のレイアウト */
@@ -375,6 +286,114 @@ html, body, #root {
 .button:active {
   transform: translateY(1px);
   background-color: #1f618d;
+}
+
+
+
+/* MenuList 用テーブル */
+.menu-table {
+  width: 100%;
+  border-collapse: collapse; /* セルの境界線を重ねてスッキリさせる */
+  margin-top: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #fff;
+}
+
+.menu-table th,
+.menu-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.menu-table th {
+  background-color: #3498db;
+  color: #fff;
+  font-weight: bold;
+}
+
+.menu-table tr:nth-child(even) {
+  background-color: #f9f9f9; /* 偶数行を少し灰色に */
+}
+
+.menu-table tr:hover {
+  background-color: #f1f1f1; /* ホバー時にハイライト */
+}
+
+/* 操作ボタン */
+.menu-table button {
+  padding: 6px 12px;
+  margin-right: 6px;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.menu-edit {
+  background-color: #f39c12; /* 編集ボタンはオレンジ */
+}
+
+.menu-edit:hover {
+  background-color: #e67e22;
+}
+
+.menu-delete {
+  background-color: #e74c3c; /* 削除ボタンは赤 */
+}
+
+.menu-delete:hover {
+  background-color: #c0392b;
+}
+
+.menu-table button:last-of-type {
+  background-color: #563ce7; 
+}
+
+.menu-table button:last-of-type:hover {
+  background-color: #3c4de7;
+}
+
+
+/* MenuForm 用スタイル */
+.menu-form {
+  display: flex;
+  flex-wrap: wrap; /* 小さい画面でも折り返す */
+  gap: 10px; /* 入力欄とボタンの間隔 */
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+.menu-form input {
+  padding: 8px 12px;
+  border: 0.5px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  flex: 1; /* 横幅を均等に広げる */
+  min-width: 120px; /* 最小幅を確保 */
+}
+
+.menu-form input:focus {
+  border-color: #3498db;
+  outline: none;
+  box-shadow: 0 0 3px rgba(52, 152, 219, 0.5);
+}
+
+.menu-form button {
+  padding: 8px 16px;
+  background-color: #2ecc71;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.menu-form button:hover {
+  background-color: #27ae60;
 }
 
 

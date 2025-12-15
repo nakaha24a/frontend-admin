@@ -1,3 +1,4 @@
+// src/components/OrderBoard.tsx
 import React from "react";
 import type { GroupedOrders, OrderStatus } from "../types/order";
 import OrderColumn from "./OrderColumn";

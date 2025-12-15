@@ -1,61 +1,43 @@
 // components/MenuList.tsx
-import React, { useEffect, useState } from "react";
-import type { Menu, MenuResponse } from "../types/menu";
-import { fetchMenuList, updateMenu, deleteMenu } from "../api/backendapi";
+import React, { useState } from "react";
+import type { Menu } from "../types/menu";
 import { MenuEdit } from "./MenuEdit";
+import { updateMenu, deleteMenu } from "../api/backendapi";
 
-export const MenuList: React.FC = () => {
-  const [menus, setMenus] = useState<Menu[]>([]);
+type MenuListProps = {
+  menus: Menu[];
+  reload: () => Promise<void>;
+};
+
+export const MenuList: React.FC<MenuListProps> = ({ menus, reload }) => {
   const [editTarget, setEditTarget] = useState<Menu | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [modalImageUrl, setModalImageUrl] = useState<string | null>(null);
 
-  // メニュー一覧取得
-  const loadMenus = async () => {
-    setLoading(true);
-    try {
-      const res: MenuResponse = await fetchMenuList();
-      const allMenus: Menu[] = res.categories
-        .map((c) => c.items)
-        .flat();
-      setMenus(allMenus);
-    } catch (err: any) {
-      alert(err.message || "メニュー取得に失敗しました");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadMenus();
-  }, []);
-
-  // 編集保存
-  const handleSave = async (data: Partial<Menu>): Promise<void> => {
+  const handleSave = async (data: Partial<Menu>) => {
     if (!editTarget) return;
     try {
       await updateMenu(editTarget.id, data);
       alert("メニューを更新しました！");
       setEditTarget(null);
-      await loadMenus();
-    } catch (err: any) {
-      alert(err.message || "更新に失敗しました");
+      await reload();
+    } catch (err: unknown) {
+      if (err instanceof Error) alert(err.message);
+      else alert("更新に失敗しました");
     }
   };
 
-  // 削除
-  const handleDelete = async (id: string): Promise<void> => {
+  const handleDelete = async (id: string) => {
     if (!window.confirm("このメニューを削除しますか？")) return;
     try {
       await deleteMenu(id);
       alert("削除しました！");
       setEditTarget(null);
-      await loadMenus();
-    } catch (err: any) {
-      alert(err.message || "削除に失敗しました");
+      await reload();
+    } catch (err: unknown) {
+      if (err instanceof Error) alert(err.message);
+      else alert("削除に失敗しました");
     }
   };
-
-  if (loading) return <p>読み込み中...</p>;
 
   return (
     <>
@@ -77,8 +59,17 @@ export const MenuList: React.FC = () => {
               <td>{menu.price}円</td>
               <td>{menu.category}</td>
               <td>
-                <button onClick={() => setEditTarget(menu)}>編集</button>
-                <button onClick={() => handleDelete(menu.id)}>削除</button>
+                <button className="menu-edit" onClick={() => setEditTarget(menu)}>編集</button>
+                <button className="menu-delete" onClick={() => handleDelete(menu.id)}>削除</button>
+                <button
+                  onClick={() => {
+                    console.log("menu.image:", menu.image);
+                    if (menu.image) setModalImageUrl(menu.image);
+                    else alert("画像がありません");
+                  }}
+                >
+                  画像を見る
+                </button>
               </td>
             </tr>
           ))}
@@ -90,8 +81,61 @@ export const MenuList: React.FC = () => {
         <MenuEdit
           menu={editTarget}
           onClose={() => setEditTarget(null)}
-          onSave={handleSave} // async 関数で Promise<void> 型
-          onDelete={() => handleDelete(editTarget.id)}               />
+          onSave={handleSave}
+          onDelete={() => handleDelete(editTarget.id)}
+        />
+      )}
+
+      {/* 画像モーダル */}
+      {modalImageUrl && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0,0,0,0.6)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+          }}
+          onClick={() => setModalImageUrl(null)}
+        >
+          <div
+            style={{ position: "relative" }}
+            onClick={(e) => e.stopPropagation()} // 内側クリックで閉じない
+          >
+            <button
+              onClick={() => setModalImageUrl(null)}
+              style={{
+                position: "absolute",
+                top: "-30px",
+                right: "0",
+                background: "red",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                padding: "5px 10px",
+                cursor: "pointer",
+                fontWeight: "bold",
+              }}
+            >
+              ×
+            </button>
+            <img
+              src={modalImageUrl}
+              alt="メニュー画像"
+              style={{
+                maxWidth: "90vw",
+                maxHeight: "90vh",
+                borderRadius: "8px",
+                boxShadow: "0 0 10px rgba(0,0,0,0.5)",
+              }}
+            />
+          </div>
+        </div>
       )}
     </>
   );
