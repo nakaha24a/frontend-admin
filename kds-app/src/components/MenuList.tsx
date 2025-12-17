@@ -1,4 +1,4 @@
-// components/MenuList.tsx
+// src/components/MenuList.tsx
 import React, { useState } from "react";
 import type { Menu } from "../types/menu";
 import { MenuEdit } from "./MenuEdit";
@@ -63,7 +63,7 @@ export const MenuList: React.FC<MenuListProps> = ({ menus, reload }) => {
                 <button className="menu-delete" onClick={() => handleDelete(menu.id)}>削除</button>
                 <button
                   onClick={() => {
-                    console.log("menu.image:", menu.image);
+                    
                     if (menu.image) setModalImageUrl(menu.image);
                     else alert("画像がありません");
                   }}

@@ -1,4 +1,4 @@
-//components/MenuAdd.tsx
+// src/components/MenuAdd.tsx
 import React from "react";
 import { MenuForm } from "./MenuForm";
 

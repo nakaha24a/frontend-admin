@@ -1,9 +1,9 @@
-// types/menu.ts
+// src/types/menu.ts
 export interface Menu {
   id: string;
   name: string;
   description?: string;
-  price: number;
+  price: number | string;
   image?: string;
   category: string;
   options?: string[];

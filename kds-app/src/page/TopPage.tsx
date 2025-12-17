@@ -1,6 +1,7 @@
+// src/page/TopPage.tsx
+
 import React from "react";
 
-// ★ この型定義を追加することで App.tsx のエラーが消えます
 interface TopPageProps {
   onNavigateOrder: () => void;
   onNavigateMenu: () => void;

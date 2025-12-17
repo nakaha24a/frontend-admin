@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// page/MenuManagementPage.tsx
+// src/page/MenuManagementPage.tsx
 import React, { useEffect, useState } from "react";
 import type { Menu, MenuResponse } from "../types/menu.ts";
 import { fetchMenuList } from "../api/backendapi.tsx";
 import { MenuList } from "../components/MenuList.tsx";
-import { MenuModal } from "../components/MenuAdd.tsx"; // モーダルを追加
+import { MenuModal } from "../components/MenuAdd.tsx";
 
 export const MenuManagementPage: React.FC = () => {
   const [menus, setMenus] = useState<Menu[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false); // モーダル管理
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false); 
 
   const loadMenus = async () => {
     setLoading(true);
@@ -30,7 +30,7 @@ export const MenuManagementPage: React.FC = () => {
       );
 
 
-      console.log("flatMenus:", flatMenus); // 確認用
+      
       setMenus(flatMenus);
     } catch (err: any) {
       alert(err.message);

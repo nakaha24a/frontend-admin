@@ -1,4 +1,4 @@
-// components/MenuEdit.tsx
+// src/components/MenuEdit.tsx
 import React, { useState } from "react";
 import type { Menu } from "../types/menu";
 

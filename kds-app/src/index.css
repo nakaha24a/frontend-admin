@@ -290,6 +290,7 @@ body {
 
 
 
+
 /* MenuList 用テーブル */
 .menu-table {
   width: 100%;
@@ -357,6 +358,7 @@ body {
 }
 
 
+
 /* MenuForm 用スタイル */
 .menu-form {
   display: flex;
@@ -364,6 +366,8 @@ body {
   gap: 10px; /* 入力欄とボタンの間隔 */
   margin-bottom: 1rem;
   align-items: center;
+  max-width: 400px;
+
 }
 
 .menu-form input {
@@ -371,8 +375,9 @@ body {
   border: 0.5px solid #ccc;
   border-radius: 4px;
   font-size: 14px;
-  flex: 1; /* 横幅を均等に広げる */
+  flex: 0 1 200px; 
   min-width: 120px; /* 最小幅を確保 */
+  
 }
 
 .menu-form input:focus {
@@ -396,6 +401,9 @@ body {
   background-color: #27ae60;
 }
 
+
+
+/* --- MenuEdit モーダル内のフォーム要素の整理 (コンパクト版) --- */
 
 .modal-bg {
   position: fixed;
@@ -425,7 +433,7 @@ body {
   margin-top: 15px;
 }
 
-/* --- MenuEdit モーダル内のフォーム要素の整理 (コンパクト版) --- */
+
 .modal-form-group {
     display: flex;        /* ラベルと入力欄を横並びに */
     align-items: center;  /* 垂直方向中央揃え */
