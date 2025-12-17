@@ -98,7 +98,11 @@ export const createMenu = async (menu: MenuImage): Promise<void> => {
     body: formData, // ★Content-Type はブラウザが自動で multipart/form-data に設定
   });
 
-  if (!res.ok) throw new Error("メニュー作成失敗");
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(errorText || "メニュー作成失敗");
+  }
+  
 };
 
 // メニュー更新
@@ -123,3 +127,4 @@ export const deleteMenu = async (id: string): Promise<void> => {
   });
   if (!res.ok) throw new Error("メニュー削除失敗");
 };
+

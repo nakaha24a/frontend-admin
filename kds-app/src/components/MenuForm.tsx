@@ -22,7 +22,7 @@ export const MenuForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => 
     const { name, value } = e.target;
     setMenu({
       ...menu,
-      [name]: value, // price も文字列で保持
+      [name]: name === "price" ? Number(value) : value,
     });
   };
 
