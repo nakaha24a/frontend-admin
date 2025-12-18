@@ -108,23 +108,36 @@ export const createMenu = async (menu: MenuImage): Promise<void> => {
 // メニュー更新
 export const updateMenu = async (
   id: string,
-  menu: Partial<Menu>
-): Promise<void> => {
-  // 修正後: /api/menu/${id}
+  menu: Partial<Menu> & { imageFile?: File ;image?: string}
+  ): Promise<void> => {
+  const formData = new FormData();
+  if (menu.name) formData.append("name", menu.name);
+  if (menu.description !== undefined) formData.append("description", menu.description);
+  if (menu.price !== undefined) formData.append("price", String(menu.price));
+  if (menu.category) formData.append("category", menu.category);
+  if (menu.isRecommended !== undefined) formData.append("isRecommended", String(menu.isRecommended));
+  if (menu.imageFile) formData.append("imageFile", menu.imageFile);
+  else if (menu.image) formData.append("image", menu.image); // 既存画像保持用
+
   const res = await fetch(`${API_BASE_URL}/api/menu/${id}`, {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(menu),
+    body: formData,
   });
-  if (!res.ok) throw new Error("メニュー更新失敗");
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text || "メニュー更新失敗");
+  }
 };
 
 // メニュー削除
 export const deleteMenu = async (id: string): Promise<void> => {
-  // 修正後: /api/menu/${id}
+  
   const res = await fetch(`${API_BASE_URL}/api/menu/${id}`, {
     method: "DELETE",
   });
   if (!res.ok) throw new Error("メニュー削除失敗");
 };
+
+
 

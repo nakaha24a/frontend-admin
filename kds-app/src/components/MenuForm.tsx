@@ -15,7 +15,7 @@ export const MenuForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => 
   });
 
   const [preview, setPreview] = useState<string | null>(null);
-  const [imageName, setImageName] = useState<string>(""); // 保存時の名前
+  
 
   // 入力変更
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,9 +28,8 @@ export const MenuForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => 
 
   // 画像選択
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.[0]) {
+  if (e.target.files?.[0]) {
       setMenu({ ...menu, imageFile: e.target.files[0] });
-      if (!imageName) setImageName(e.target.files[0].name.replace(/\.[^/.]+$/, ""));
     }
   };
 
@@ -49,23 +48,11 @@ export const MenuForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (menu.imageFile && !imageName.trim()) {
-      alert("画像名を入力してください");
-      return;
-    }
-
     try {
       const menuToSend: MenuImage = {
         ...menu,
         price: Number(menu.price), // 数値に変換
       };
-
-      if (menu.imageFile) {
-        // 常に .jpeg 拡張子に変換
-        menuToSend.imageFile = new File([menu.imageFile], `${imageName}.jpeg`, {
-          type: "image/jpeg",
-        });
-      }
 
       console.log("送信するメニュー:", menuToSend);
       await createMenu(menuToSend);
@@ -81,7 +68,6 @@ export const MenuForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => 
         isRecommended: false,
       });
       setPreview(null);
-      setImageName("");
       onSuccess();
     } catch (err: any) {
       alert(err.message || "登録に失敗しました");
