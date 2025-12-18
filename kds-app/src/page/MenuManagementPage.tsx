@@ -9,28 +9,24 @@ import { MenuModal } from "../components/MenuAdd.tsx";
 export const MenuManagementPage: React.FC = () => {
   const [menus, setMenus] = useState<Menu[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false); 
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const loadMenus = async () => {
     setLoading(true);
     try {
       const data: MenuResponse = await fetchMenuList();
 
-      
-
       const flatMenus: Menu[] = data.categories.flatMap((cat) =>
-          cat.items.map((menu) => {
-            const filename = menu.image?.split("/").pop();
-            const safeFilename = filename ? filename.toLowerCase() : undefined;
-            return {
-              ...menu,
-              image: safeFilename ? `/assets/${safeFilename}` : undefined,
-            };
-          })
+        cat.items.map((menu) => {
+          const filename = menu.image?.split("/").pop();
+          const safeFilename = filename ? filename.toLowerCase() : undefined;
+          return {
+            ...menu,
+            image: safeFilename ? `/assets/${safeFilename}` : undefined,
+          };
+        })
       );
 
-
-      
       setMenus(flatMenus);
     } catch (err: any) {
       alert(err.message);
