@@ -24,7 +24,7 @@ export async function fetchKitchenOrders(): Promise<KitchenOrder[]> {
   return response.json();
 }
 
-// 注文API呼び出し関数
+// 注文API呼び出し
 
 export async function updateOrderStatus(
   orderId: string,
@@ -40,7 +40,7 @@ export async function updateOrderStatus(
   return response.json();
 }
 
-// テーブル番号取得API呼び出し関数
+// テーブル番号取得API呼び出し
 
 export async function fetchOrdersByTable(
   tableNumber: string
@@ -66,7 +66,7 @@ export async function fetchTableNumbers(): Promise<string[]> {
 }
 
 // メニュー関連
-// メニュー一覧取得API呼び出し関数
+// メニュー一覧取得API呼び出し
 
 export const fetchMenuList = async (): Promise<MenuResponse> => {
 
@@ -76,7 +76,7 @@ export const fetchMenuList = async (): Promise<MenuResponse> => {
 };
 
 
-// メニュー追加API呼び出し関数
+// メニュー追加API呼び出し
 
 export const createMenu = async (menu: MenuImage): Promise<void> => {
   const formData = new FormData();

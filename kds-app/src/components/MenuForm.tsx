@@ -74,6 +74,7 @@ export const MenuForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => 
     }
   };
 
+  // メニュー項目
   return (
     <form
       onSubmit={handleSubmit}

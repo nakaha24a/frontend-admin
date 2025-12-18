@@ -9,6 +9,7 @@ interface OrderBoardProps {
   onDelete: (orderId: number) => void;
 }
 
+// 注文ステータス表示
 const getColumnTitle = (status: OrderStatus): string => {
   switch (status) {
     case 5:

@@ -12,7 +12,7 @@ export const MenuModal: React.FC<MenuModalProps> = ({ isOpen, onClose, onSuccess
   if (!isOpen) return null;
 
   return (
-    <div
+    <div // キャンセルボタン
       style={{
         position: "fixed",
         top: 0, left: 0,
@@ -23,7 +23,7 @@ export const MenuModal: React.FC<MenuModalProps> = ({ isOpen, onClose, onSuccess
       }}
       onClick={onClose}
     >
-      <div
+      <div // 追加ボタン
         style={{
           backgroundColor: "white",
           padding: "20px",

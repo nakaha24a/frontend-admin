@@ -13,6 +13,7 @@ export const MenuList: React.FC<MenuListProps> = ({ menus, reload }) => {
   const [editTarget, setEditTarget] = useState<Menu | null>(null);
   const [modalImageUrl, setModalImageUrl] = useState<string | null>(null);
 
+    // テーブルヘッダー
   return (
     <> 
       <table className="menu-table"> 
