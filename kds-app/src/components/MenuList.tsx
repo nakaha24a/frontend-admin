@@ -73,7 +73,7 @@ export const MenuList: React.FC<MenuListProps> = ({ menus, reload }) => {
                       alert("JPEG画像ではありません");
                       return;
                     }
-                    setModalImageUrl(menu.image);
+                    setModalImageUrl(`./assets/${menu.image}`);
                   }}
                   style={{ marginLeft: 4 }}
                 >

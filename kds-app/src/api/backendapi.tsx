@@ -1,7 +1,7 @@
 // src/api/backendapi.tsx
 
 import type { ApiOrderStatus, Order } from "../types/order";
-import type { MenuResponse, Menu } from "../types/menu";
+import type { MenuResponse } from "../types/menu";
 import type { MenuImage } from "../types/menuimage";
 
 export interface KitchenOrder {
@@ -14,8 +14,9 @@ export interface KitchenOrder {
 }
 
 // 環境変数 (ここは .env の設定、つまり ...16:3000 が使われます)
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+
+
 
 export async function fetchKitchenOrders(): Promise<KitchenOrder[]> {
   const url = `${API_BASE_URL}/api/kitchen/orders`;
@@ -108,20 +109,11 @@ export const createMenu = async (menu: MenuImage): Promise<void> => {
 // メニュー更新
 export const updateMenu = async (
   id: string,
-  menu: Partial<Menu> & { imageFile?: File ;image?: string}
-  ): Promise<void> => {
-  const formData = new FormData();
-  if (menu.name) formData.append("name", menu.name);
-  if (menu.description !== undefined) formData.append("description", menu.description);
-  if (menu.price !== undefined) formData.append("price", String(menu.price));
-  if (menu.category) formData.append("category", menu.category);
-  if (menu.isRecommended !== undefined) formData.append("isRecommended", String(menu.isRecommended));
-  if (menu.imageFile) formData.append("imageFile", menu.imageFile);
-  else if (menu.image) formData.append("image", menu.image); // 既存画像保持用
-
+  formData: FormData
+): Promise<void> => {
   const res = await fetch(`${API_BASE_URL}/api/menu/${id}`, {
     method: "PUT",
-    body: formData,
+    body: formData, // ★そのまま送る
   });
 
   if (!res.ok) {
