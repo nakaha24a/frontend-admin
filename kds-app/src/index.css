@@ -357,6 +357,43 @@ body {
   background-color: #3c4de7;
 }
 
+/* 画像表示モーダルのボタン付きラッパー */
+.modal-image-wrapper {
+  position: relative; /* ×ボタンを画像上に絶対配置するため */
+  display: inline-block;
+}
+
+/* ×ボタン */
+.modal-image-close {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  font-weight: bold;
+  line-height: 24px;
+  text-align: center;
+  padding: 0;
+  z-index: 10;
+  transition: background-color 0.2s;
+}
+
+.modal-image-close:hover {
+  background-color: darkred;
+}
+
+/* 画像そのもの */
+.modal-image-wrapper img {
+  display: block;
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 6px;
+}
 
 
 /* MenuForm 用スタイル */

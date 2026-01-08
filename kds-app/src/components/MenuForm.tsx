@@ -70,7 +70,11 @@ export const MenuForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => 
       setPreview(null);
       onSuccess();
     } catch (err: any) {
-      alert(err.message || "登録に失敗しました");
+        if (err.response?.data?.error) {
+        alert(err.response.data.error || "同名のファイルがすでに存在します"); 
+      } else {
+        alert(err.message || "登録に失敗しました");
+      }
     }
   };
 

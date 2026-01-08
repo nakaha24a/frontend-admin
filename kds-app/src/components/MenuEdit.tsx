@@ -9,6 +9,8 @@ interface Props {
   onDelete: () => void;
 }
 
+const [saving, setSaving] = useState(false);
+
 export const MenuEdit: React.FC<Props> = ({ menu, onClose, onSave }) => {
   if (!menu) return null;
 
@@ -53,19 +55,35 @@ export const MenuEdit: React.FC<Props> = ({ menu, onClose, onSave }) => {
 
   // ★ 保存処理（FormDataで送信）
   const handleSave = async () => {
-    const formData = new FormData();
-    formData.append("name", form.name);
-    formData.append("price", String(form.price));
-    formData.append("description", form.description);
-    formData.append("category", form.category);
-    formData.append("isRecommended", String(form.isRecommended));
+    setSaving(true);
 
-    if (form.imageFile) {
-      formData.append("imageFile", form.imageFile);
+    try {
+      const formData = new FormData();
+      formData.append("name", form.name);
+      formData.append("price", String(form.price));
+      formData.append("description", form.description);
+      formData.append("category", form.category);
+      formData.append("isRecommended", String(form.isRecommended));
+
+      if (form.imageFile) {
+        formData.append("imageFile", form.imageFile);
+      }
+
+      await onSave(formData);
+      onClose();
+
+    } catch (err: any) {
+      console.error("更新エラー:", err);
+
+      if (err.response?.data?.error) {
+        alert("更新に失敗しました: " + err.response.data.error);
+      } else {
+        alert("更新に失敗しました: " + (err.message || "不明なエラー"));
+      }
+
+    } finally {
+      setSaving(false);
     }
-
-    await onSave(formData);
-    onClose();
   };
 
   return (
@@ -138,6 +156,7 @@ export const MenuEdit: React.FC<Props> = ({ menu, onClose, onSave }) => {
           <button
             className="modal-button modal-save"
             onClick={handleSave}
+            disabled={saving}
           >
             保存
           </button>

@@ -1,5 +1,4 @@
 // src/api/backendapi.tsx
-
 import type { ApiOrderStatus, Order } from "../types/order";
 import type { MenuResponse } from "../types/menu";
 import type { MenuImage } from "../types/menuimage";
@@ -14,8 +13,7 @@ export interface KitchenOrder {
 }
 
 // 環境変数 (ここは .env の設定、つまり ...16:3000 が使われます)
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
-
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://172.16.31.16";
 
 
 export async function fetchKitchenOrders(): Promise<KitchenOrder[]> {
@@ -66,13 +64,20 @@ export async function fetchTableNumbers(): Promise<string[]> {
   return res.json();
 }
 
-// メニュー関連
+// メニュー関連↓
+
 // メニュー一覧取得API呼び出し
 
 export const fetchMenuList = async (): Promise<MenuResponse> => {
 
   const res = await fetch(`${API_BASE_URL}/api/menu`);
-  if (!res.ok) throw new Error("メニュー一覧取得失敗");
+  if (!res.ok) {
+    const contentType = res.headers.get("content-type");
+    const body = await res.text();
+
+    console.error("API error:", contentType, body)
+    throw new Error("メニュー一覧取得失敗");
+  }
   return res.json();
 };
 
@@ -108,19 +113,20 @@ export const createMenu = async (menu: MenuImage): Promise<void> => {
 
 // メニュー更新
 export const updateMenu = async (
-  id: string,
-  formData: FormData
-): Promise<void> => {
-  const res = await fetch(`${API_BASE_URL}/api/menu/${id}`, {
-    method: "PUT",
-    body: formData, // ★そのまま送る
-  });
+    id: string,
+    formData: FormData
+  ): Promise<void> => {
+    const res = await fetch(`${API_BASE_URL}/api/menu/${id}`, {
+      method: "POST",
+      body: formData, // ★そのまま送る
+    });
 
   if (!res.ok) {
     const text = await res.text();
     throw new Error(text || "メニュー更新失敗");
   }
 };
+
 
 // メニュー削除
 export const deleteMenu = async (id: string): Promise<void> => {
