@@ -9,9 +9,10 @@ interface Props {
   onDelete: () => void;
 }
 
-const [saving, setSaving] = useState(false);
+
 
 export const MenuEdit: React.FC<Props> = ({ menu, onClose, onSave }) => {
+  const [saving, setSaving] = useState(false);
   if (!menu) return null;
 
   const [form, setForm] = useState({
