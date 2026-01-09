@@ -13,7 +13,7 @@ export interface KitchenOrder {
 }
 
 // 環境変数 (ここは .env の設定、つまり ...16:3000 が使われます)
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://172.16.31.16";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://172.16.31.16";
 
 
 export async function fetchKitchenOrders(): Promise<KitchenOrder[]> {

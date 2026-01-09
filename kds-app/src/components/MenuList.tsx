@@ -13,6 +13,27 @@ export const MenuList: React.FC<MenuListProps> = ({ menus, reload }) => {
   const [editTarget, setEditTarget] = useState<Menu | null>(null);
   const [modalImageUrl, setModalImageUrl] = useState<string | null>(null);
 
+  const CATEGORY_COLORS = [
+    "#E3F2FD",
+    "#FFF3E0",
+    "#E8F5E9",
+    "#FCE4EC",
+    "#F3E5F5",
+    "#FFFDE7",
+  ];
+
+  /* カテゴリ → 色の対応表 ===== */
+  const categoryColorMap: Record<string, string> = {};
+  let colorIndex = 0;
+
+  menus.forEach((menu) => {
+    if (!categoryColorMap[menu.category]) {
+      categoryColorMap[menu.category] =
+        CATEGORY_COLORS[colorIndex % CATEGORY_COLORS.length];
+      colorIndex++;
+    }
+  });
+
   return (
     <>
       <table className="menu-table">
@@ -28,7 +49,12 @@ export const MenuList: React.FC<MenuListProps> = ({ menus, reload }) => {
         </thead>
         <tbody>
           {menus.map((menu) => (
-            <tr key={menu.id}>
+            <tr key={menu.id}
+              style={{
+                backgroundColor: categoryColorMap[menu.category],
+                borderTop: "2px solid #ddd",
+              }}
+            >
               <td>{menu.id}</td>
               <td>{menu.name}</td>
               <td>{menu.price}円</td>
