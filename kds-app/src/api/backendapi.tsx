@@ -96,7 +96,8 @@ export const createMenu = async (menu: MenuImage): Promise<void> => {
 
   // 画像ファイルがある場合のみ追加
   if (menu.imageFile) {
-    formData.append("imageFile", menu.imageFile);
+    const filename = menu.imageFile.name;
+    formData.append("imageFile", menu.imageFile, filename);
   }
 
   const res = await fetch(`${API_BASE_URL}/api/menu`, {

@@ -55,6 +55,7 @@ export const MenuForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => 
       };
 
       console.log("送信するメニュー:", menuToSend);
+      console.log("送信する filename =", menu.imageFile?.name);
       await createMenu(menuToSend);
 
       alert("メニューを追加しました！");
