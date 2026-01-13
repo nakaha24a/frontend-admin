@@ -4,6 +4,8 @@ import type { Menu } from "../types/menu";
 import { MenuEdit } from "./MenuEdit";
 import { updateMenu, deleteMenu } from "../api/backendapi";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 type MenuListProps = {
   menus: Menu[];
   reload: () => Promise<void>;
@@ -22,7 +24,7 @@ export const MenuList: React.FC<MenuListProps> = ({ menus, reload }) => {
     "#FFFDE7",
   ];
 
-  /* カテゴリ → 色の対応表 ===== */
+  /* カテゴリ → 色の対応表 */
   const categoryColorMap: Record<string, string> = {};
   let colorIndex = 0;
 
@@ -49,7 +51,8 @@ export const MenuList: React.FC<MenuListProps> = ({ menus, reload }) => {
         </thead>
         <tbody>
           {menus.map((menu) => (
-            <tr key={menu.id}
+            <tr
+              key={menu.id}
               style={{
                 backgroundColor: categoryColorMap[menu.category],
                 borderTop: "2px solid #ddd",
@@ -63,8 +66,12 @@ export const MenuList: React.FC<MenuListProps> = ({ menus, reload }) => {
                 {menu.isRecommended ? "✅" : "❌"}
               </td>
               <td>
-                <button className="menu-edit"
-                  onClick={() => setEditTarget(menu)}>編集</button>
+                <button
+                  className="menu-edit"
+                  onClick={() => setEditTarget(menu)}
+                >
+                  編集
+                </button>
 
                 <button
                   className="menu-delete"
@@ -86,11 +93,14 @@ export const MenuList: React.FC<MenuListProps> = ({ menus, reload }) => {
                       alert("画像がありません");
                       return;
                     }
-                    if (!/\.(jpe?g)$/i.test(menu.image)) {
-                      alert("JPEG画像ではありません");
-                      return;
-                    }
-                    console.log(menu.image);
+
+                    // DBの値は /assets/xxx.jpeg のまま使う
+                    console.log("image path =", menu.image);
+                    console.log(
+                      "full url =",
+                      `${API_BASE_URL}${menu.image}`
+                    );
+
                     setModalImageUrl(menu.image);
                   }}
                 >
@@ -133,7 +143,7 @@ export const MenuList: React.FC<MenuListProps> = ({ menus, reload }) => {
           }}
         >
           <img
-            src={modalImageUrl}
+            src={`${API_BASE_URL}${modalImageUrl}`}
             alt="メニュー画像"
             style={{ maxWidth: "90vw", maxHeight: "90vh" }}
           />
