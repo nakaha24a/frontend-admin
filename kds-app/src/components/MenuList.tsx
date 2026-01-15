@@ -1,5 +1,5 @@
 // src/components/MenuList.tsx
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import type { Menu } from "../types/menu";
 import { MenuEdit } from "./MenuEdit";
 import { updateMenu, deleteMenu } from "../api/backendapi";
@@ -14,6 +14,7 @@ type MenuListProps = {
 export const MenuList: React.FC<MenuListProps> = ({ menus, reload }) => {
   const [editTarget, setEditTarget] = useState<Menu | null>(null);
   const [modalImageUrl, setModalImageUrl] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
 
   const CATEGORY_COLORS = [
     "#E3F2FD",
@@ -24,20 +25,52 @@ export const MenuList: React.FC<MenuListProps> = ({ menus, reload }) => {
     "#FFFDE7",
   ];
 
-  /* カテゴリ → 色の対応表 */
-  const categoryColorMap: Record<string, string> = {};
-  let colorIndex = 0;
+  const categoryColorMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    let index = 0;
 
-  menus.forEach((menu) => {
-    if (!categoryColorMap[menu.category]) {
-      categoryColorMap[menu.category] =
-        CATEGORY_COLORS[colorIndex % CATEGORY_COLORS.length];
-      colorIndex++;
-    }
-  });
+    menus.forEach((menu) => {
+      if (!map[menu.category]) {
+        map[menu.category] =
+          CATEGORY_COLORS[index % CATEGORY_COLORS.length];
+        index++;
+      }
+    });
+
+    return map;
+  }, [menus]);
+
+  const filteredMenus = useMemo(() => {
+    if (!search) return menus;
+    const keyword = search.toLowerCase();
+
+    return menus.filter(
+      (menu) =>
+        menu.name.toLowerCase().includes(keyword) ||
+        menu.category.toLowerCase().includes(keyword) ||
+        menu.id.toString().includes(keyword)
+    );
+  }, [menus, search]);
 
   return (
     <>
+      {/* ===== 検索バー ===== */}
+      <div style={{ marginBottom: 12 }}>
+        <input
+          type="text"
+          placeholder="名前・カテゴリ・IDで検索"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{ width: 320, padding: "6px 8px", fontSize: 14 }}
+        />
+        {search && (
+          <button onClick={() => setSearch("")} style={{ marginLeft: 8 }}>
+            クリア
+          </button>
+        )}
+      </div>
+
+      {/* ===== メニュー一覧 ===== */}
       <table className="menu-table">
         <thead>
           <tr>
@@ -50,7 +83,7 @@ export const MenuList: React.FC<MenuListProps> = ({ menus, reload }) => {
           </tr>
         </thead>
         <tbody>
-          {menus.map((menu) => (
+          {filteredMenus.map((menu) => (
             <tr
               key={menu.id}
               style={{
@@ -65,17 +98,21 @@ export const MenuList: React.FC<MenuListProps> = ({ menus, reload }) => {
               <td style={{ textAlign: "center" }}>
                 {menu.isRecommended ? "✅" : "❌"}
               </td>
-              <td>
-                <button
-                  className="menu-edit"
+
+              {/* ===== 操作（アイコン化） ===== */}
+              <td style={{ whiteSpace: "nowrap" }}>
+                {/* 編集 */}
+                <button className="menu-edit"
+                  title="編集"
                   onClick={() => setEditTarget(menu)}
                 >
                   編集
                 </button>
 
-                <button
-                  className="menu-delete"
-                  style={{ marginLeft: 4 }}
+                {/* 削除 */}
+                <button className="menu-delete"
+                  title="削除"
+                  style={{ marginLeft: 6 }}
                   onClick={async () => {
                     if (!window.confirm("このメニューを削除しますか？")) return;
                     await deleteMenu(menu.id);
@@ -85,33 +122,35 @@ export const MenuList: React.FC<MenuListProps> = ({ menus, reload }) => {
                   削除
                 </button>
 
-                <button
-                  className="menu-look"
-                  style={{ marginLeft: 4 }}
+                {/* 画像 */}
+                <button className="menu-look"
+                  title="画像を見る"
+                  style={{ marginLeft: 6 }}
                   onClick={() => {
                     if (!menu.image) {
                       alert("画像がありません");
                       return;
                     }
-
-                    // DBの値は /assets/xxx.jpeg のまま使う
-                    console.log("image path =", menu.image);
-                    console.log(
-                      "full url =",
-                      `${API_BASE_URL}${menu.image}`
-                    );
-
                     setModalImageUrl(menu.image);
                   }}
                 >
-                  画像を見る
+                  画像
                 </button>
               </td>
             </tr>
           ))}
+
+          {filteredMenus.length === 0 && (
+            <tr>
+              <td colSpan={6} style={{ textAlign: "center", padding: 16 }}>
+                該当するメニューがありません
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
 
+      {/* ===== 編集モーダル ===== */}
       {editTarget && (
         <MenuEdit
           menu={editTarget}
@@ -129,6 +168,7 @@ export const MenuList: React.FC<MenuListProps> = ({ menus, reload }) => {
         />
       )}
 
+      {/* ===== 画像モーダル ===== */}
       {modalImageUrl && (
         <div
           onClick={() => setModalImageUrl(null)}

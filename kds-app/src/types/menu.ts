@@ -8,6 +8,7 @@ export interface Menu {
   category: string;
   options?: string[];
   isRecommended?: boolean;
+  isAvailable: boolean;
 }
 
 export interface MenuCategory {

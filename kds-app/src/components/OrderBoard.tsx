@@ -13,7 +13,7 @@ interface OrderBoardProps {
 const getColumnTitle = (status: OrderStatus): string => {
   switch (status) {
     case 5:
-      return "🔔 スタッフ呼び出し"; // 追加
+      return "🔔 スタッフ呼出";
     case 0:
       return "注文受付";
     case 1:
@@ -27,8 +27,18 @@ const getColumnTitle = (status: OrderStatus): string => {
   }
 };
 
-// 5(呼び出し) を先頭に追加
+// ステータスの順番
 const STATUSES: readonly OrderStatus[] = [5, 0, 1, 2, 3];
+
+// ステータスごとのカラム幅
+const COLUMN_WIDTHS: Record<OrderStatus, number> = {
+  5: 150, // 呼び出しだけ狭い
+  0: 300,
+  1: 300,
+  2: 300,
+  3: 300,
+  4: 0, // ダミー　使わない
+};
 
 const OrderBoard: React.FC<OrderBoardProps> = ({
   orders,
@@ -53,6 +63,7 @@ const OrderBoard: React.FC<OrderBoardProps> = ({
           orders={orders[status] || []}
           onStatusChange={onStatusChange}
           onDelete={onDelete}
+          width={COLUMN_WIDTHS[status]}
         />
       ))}
     </div>

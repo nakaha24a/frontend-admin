@@ -1,15 +1,15 @@
 // src/components/OrderColumn.tsx
-
 import React from "react";
-import type { Order, OrderStatus } from "../types/order.ts";
-import OrderCard from "./OrderCard.tsx";
+import type { Order, OrderStatus } from "../types/order";
+import OrderCard from "./OrderCard";
 
 interface OrderColumnProps {
   title: string;
   orders: Order[];
-  onStatusChange: (orderId: number) => void;
   status: OrderStatus;
+  onStatusChange: (orderId: number) => void;
   onDelete: (orderId: number) => void;
+  width?: number;
 }
 
 const OrderColumn: React.FC<OrderColumnProps> = ({
@@ -17,12 +17,13 @@ const OrderColumn: React.FC<OrderColumnProps> = ({
   orders,
   onStatusChange,
   onDelete,
+  width,
 }) => {
   return (
     <div
       style={{
         flexShrink: 0,
-        width: "300px",
+        width: `${width}px`,
         padding: "10px",
         border: "1px solid #eee",
         backgroundColor: "#f9f9f9",
@@ -38,7 +39,7 @@ const OrderColumn: React.FC<OrderColumnProps> = ({
         {title} ({orders.length})
       </h2>
       <div className="order-list">
-        {orders
+        {[...orders]
           .sort((a, b) => a.time.getTime() - b.time.getTime())
           .map((order) => (
             <OrderCard

@@ -12,6 +12,7 @@ export const MenuForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => 
     category: "",
     options: [],
     isRecommended: false,
+    isAvailable:true,
   });
 
   const [preview, setPreview] = useState<string | null>(null);
@@ -67,6 +68,7 @@ export const MenuForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => 
         category: "",
         options: [],
         isRecommended: false,
+        isAvailable:true,
       });
       setPreview(null);
       onSuccess();
