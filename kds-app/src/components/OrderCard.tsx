@@ -130,24 +130,27 @@ const OrderCard: React.FC<OrderCardProps> = ({
 
       {/* 注文内容 */}
       <ul style={{ paddingLeft: "20px", margin: "0 0 15px 0" }}>
-        {order.items.map((item: any, idx: number) => {
-          const hasOptions = item.options && item.options.length > 0;
+            {order.items.map((item: any, idx: number) => {
+              const validOptions =
+                item.options?.filter(
+                  (opt: any) => typeof opt.name === "string" && opt.name.trim() !== ""
+                ) ?? [];
 
-          return (
-            <li key={idx} style={{ marginBottom: "5px" }}>
-              <strong>{item.name}</strong> × {item.quantity}
+              return (
+                <li key={idx} style={{ marginBottom: "5px" }}>
+                  <strong>{item.name}</strong> × {item.quantity}
 
-              {/* option は中身がある時だけ表示 */}
-              {hasOptions && (
-                <ul style={{ paddingLeft: "15px", marginTop: "5px" }}>
-                  {item.options.map((opt: any, oidx: number) => (
-                    <li key={oidx}>・{opt.name}</li>
-                  ))}
-                </ul>
-              )}
-            </li>
-          );
-        })}
+                  {/* 有効な option がある時だけ表示 */}
+                  {validOptions.length > 0 && (
+                    <ul style={{ paddingLeft: "15px", marginTop: "5px" }}>
+                      {validOptions.map((opt: any, oidx: number) => (
+                        <li key={oidx}>・{opt.name}</li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              );
+            })}
       </ul>
 
       {/* ステータス操作 */}
