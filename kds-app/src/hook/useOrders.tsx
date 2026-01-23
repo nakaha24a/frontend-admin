@@ -1,4 +1,4 @@
-// src/hook/useOrder.tsx
+// src/hook/useOrders.tsx
 import { useState, useCallback, useMemo, useEffect } from "react";
 import type {
   Order,
@@ -41,6 +41,7 @@ export const useOrders = (tableNumber?: string) => {
     loadTableNumbers();
   }, []);
 
+  // 注文取得
   const loadOrders = useCallback(async () => {
     try {
       let fetchedOrders: any[] = [];
@@ -50,6 +51,7 @@ export const useOrders = (tableNumber?: string) => {
         fetchedOrders = await fetchKitchenOrders();
       }
 
+      //　注文ステータス保存
       const convertedOrders: Order[] = fetchedOrders.map((o) => {
         let statusVal: OrderStatus = 0;
         if (typeof o.status === "number") {
@@ -99,6 +101,7 @@ export const useOrders = (tableNumber?: string) => {
     [loadOrders]
   );
 
+  // 注文ステータス更新
   const changeOrderStatus = useCallback(
     async (id: number) => {
       const targetOrder = orders.find((o) => o.id === id);

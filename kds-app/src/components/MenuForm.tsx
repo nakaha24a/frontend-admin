@@ -48,6 +48,18 @@ export const MenuForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => 
   // 送信
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // 必須項目チェック
+    if (
+      !menu.id.trim() ||
+      !menu.name.trim() ||
+      menu.price === "" ||
+      Number(menu.price) <= 0 ||
+      !menu.imageFile
+    ) {
+      alert("ID・メニュー名・価格・画像は必須項目です");
+      return; // ← 追加処理を止める
+    }
 
     try {
       const menuToSend: MenuImage = {
@@ -56,7 +68,7 @@ export const MenuForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => 
       };
 
       console.log("送信するメニュー:", menuToSend);
-      console.log("送信する filename =", menu.imageFile?.name);
+      
       await createMenu(menuToSend);
 
       alert("メニューを追加しました！");

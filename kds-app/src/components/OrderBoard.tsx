@@ -3,6 +3,7 @@ import React from "react";
 import type { GroupedOrders, OrderStatus } from "../types/order";
 import OrderColumn from "./OrderColumn";
 
+
 interface OrderBoardProps {
   orders: GroupedOrders;
   onStatusChange: (orderId: number) => void;
@@ -13,13 +14,13 @@ interface OrderBoardProps {
 const getColumnTitle = (status: OrderStatus): string => {
   switch (status) {
     case 5:
-      return "🔔 スタッフ呼出";
+      return "🔔 店員呼出";
     case 0:
       return "注文受付";
     case 1:
       return "調理中";
     case 2:
-      return "調理完了 (提供待ち)";
+      return "調理完了（提供待ち）";
     case 3:
       return "提供済み";
     default:
@@ -32,12 +33,12 @@ const STATUSES: readonly OrderStatus[] = [5, 0, 1, 2, 3];
 
 // ステータスごとのカラム幅
 const COLUMN_WIDTHS: Record<OrderStatus, number> = {
-  5: 150, // 呼び出しだけ狭い
+  5: 200,
   0: 300,
   1: 300,
   2: 300,
   3: 300,
-  4: 0, // ダミー　使わない
+  4: 0, // 未使用
 };
 
 const OrderBoard: React.FC<OrderBoardProps> = ({
