@@ -114,6 +114,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
                 {state === 2 && " ✅"}
               </div>
 
+
               {/* ★ options が配列かつ中身があれば表示 */}
               {Array.isArray(item.options) && item.options.length > 0 && (
                 <ul style={{ paddingLeft: 16, marginTop: 4, fontSize: 13 }}>
@@ -122,6 +123,9 @@ const OrderCard: React.FC<OrderCardProps> = ({
                       <li key={oidx}>・{opt.name}</li>
                     )
                   )}
+                 {console.log("item.options:", item.options)}
+                 
+
                 </ul>
               )}
 
@@ -138,7 +142,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
                         )
                       }
                     />
-                    調理開始
+                    開始
                   </label>
 
                   <label style={{ opacity: state < 1 ? 0.4 : 1 }}>
@@ -152,7 +156,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
                         )
                       }
                     />
-                    調理完了
+                    完了
                   </label>
                 </div>
               )}
