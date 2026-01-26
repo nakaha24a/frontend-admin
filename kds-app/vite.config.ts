@@ -3,6 +3,8 @@ import react from "@vitejs/plugin-react";
 
 // https://vite.dev/config/
 export default defineConfig({
+ 
+  publicDir: "public",
   plugins: [react()],
   define: {
     "process.env": {},
@@ -20,6 +22,11 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, "/api"), // パスはそのまま
+      },
+      "/assets": {
+        target: "https://172.16.31.16",
+        changeOrigin: true,
+        secure: false,
       },
     },
   },

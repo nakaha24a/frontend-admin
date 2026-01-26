@@ -74,11 +74,11 @@ export const MenuList: React.FC<MenuListProps> = ({ menus, reload }) => {
       <table className="menu-table">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>名前</th>
-            <th>価格</th>
-            <th>カテゴリ</th>
-            <th>おすすめ</th>
+            <th style={{ textAlign: "center" }}>ID</th>
+            <th style={{ textAlign: "center" }}>名前</th>
+            <th style={{ textAlign: "center" }}>価格</th>
+            <th style={{ textAlign: "center" }}>カテゴリ</th>
+            <th style={{ textAlign: "center" }}>おすすめ</th>
             <th>操作</th>
           </tr>
         </thead>
@@ -91,10 +91,10 @@ export const MenuList: React.FC<MenuListProps> = ({ menus, reload }) => {
                 borderTop: "2px solid #ddd",
               }}
             >
-              <td>{menu.id}</td>
-              <td>{menu.name}</td>
-              <td>{menu.price}円</td>
-              <td>{menu.category}</td>
+              <td style={{ textAlign: "center" }}>{menu.id}</td>
+              <td style={{ textAlign: "center" }}>{menu.name}</td>
+              <td style={{ textAlign: "center" }}>{menu.price}円</td>
+              <td style={{ textAlign: "center" }}>{menu.category}</td>
               <td style={{ textAlign: "center" }}>
                 {menu.isRecommended ? "✅" : "❌"}
               </td>
@@ -132,6 +132,7 @@ export const MenuList: React.FC<MenuListProps> = ({ menus, reload }) => {
                       return;
                     }
                     setModalImageUrl(menu.image);
+                    
                   }}
                 >
                   画像
