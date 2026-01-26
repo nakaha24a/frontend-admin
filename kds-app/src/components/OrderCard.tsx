@@ -52,7 +52,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
       case 5:
         return "#ef4444"; // 呼出は赤
       default:
-        return "#9ca3af";
+        return "#9ca3af"; // 非活性はグレー
     }
   };
 
@@ -165,6 +165,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
         })}
       </ul>
 
+      {/* 全ての完了にチェックが入るまでボタンは非活性 */}
       <button
         disabled={!isButtonEnabled}
         onClick={() =>

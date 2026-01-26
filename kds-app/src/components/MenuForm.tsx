@@ -140,7 +140,7 @@ export const MenuForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => 
 
       
 
-      {/* プレビュー */}
+      {/* 画像プレビュー */}
       {preview && (
         <img
           src={preview}
@@ -154,6 +154,7 @@ export const MenuForm: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => 
         />
       )}
 
+      {/* 追加ボタン */}
       <button
         type="submit"
         style={{
