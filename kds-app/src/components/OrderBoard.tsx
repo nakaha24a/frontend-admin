@@ -20,9 +20,9 @@ const getColumnTitle = (status: OrderStatus): string => {
     case 1:
       return "調理中";
     case 2:
-      return "調理完了（提供待ち）";
+      return "提供待ち";
     case 3:
-      return "提供済み";
+      return "提供完了";
     default:
       return "";
   }

@@ -130,42 +130,45 @@ const OrderCard: React.FC<OrderCardProps> = ({
               )}
 
               {/* 調理チェック */}
+              {/* トグルで調理開始完了を操作 */}
               {isCookingColumn && (
-                <div style={{ marginTop: 4, display: "flex", gap: 10 }}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={state >= 1}
-                      onChange={() =>
-                        setCookStates((prev) =>
-                          prev.map((s, i) => (i === idx ? 1 : s))
-                        )
-                      }
-                    />
-                    開始
-                  </label>
-
-                  <label style={{ opacity: state < 1 ? 0.4 : 1 }}>
-                    <input
-                      type="checkbox"
-                      checked={state === 2}
-                      disabled={state < 1}
-                      onChange={() =>
-                        setCookStates((prev) =>
-                          prev.map((s, i) => (i === idx ? 2 : s))
-                        )
-                      }
-                    />
-                    完了
-                  </label>
-                </div>
-              )}
-            </li>
-          );
-        })}
+              <div style={{ marginTop: 8 }}>
+                <button
+                  onClick={() =>
+                    setCookStates((prev) =>
+                      prev.map((s, i) =>
+                        i === idx ? Math.min(s + 1, 2) : s
+                      )
+                    )
+                  }
+                  style={{
+                    padding: "6px 14px",
+                    borderRadius: 999,
+                    border: "none",
+                    fontWeight: "bold",
+                    fontSize: 13,
+                    cursor: "pointer",
+                    background:
+                      state === 0 ? "#3b82f6" :
+                      state === 1 ? "#eab308" :
+                      "#22c55e",
+                    color: "#fff",
+                    boxShadow: "0 2px 4px rgba(0,0,0,0.15)",
+                    transition: "all 0.2s ease",
+                  }}
+                >
+                  {state === 0 && "🔥 調理開始"}
+                  {state === 1 && "⏳ 調理中"}
+                  {state === 2 && "✅ 完了"}
+                </button>
+              </div>
+            )}
+                        </li>
+                      );
+                    })}
       </ul>
 
-      {/* 全ての完了にチェックが入るまでボタンは非活性 */}
+      {/* 全ての完了が入るまでボタンは非活性 */}
       <button
         disabled={!isButtonEnabled}
         onClick={() =>
