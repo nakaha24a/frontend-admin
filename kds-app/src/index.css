@@ -73,7 +73,7 @@ body {
     padding: 10px;
     margin-top: 20px;
     overflow-x: auto; /* PC/広い画面では横スクロールを許可 */
-    overflow-y: visible;
+    overflow-y:hidden;
 }
 
 .add-order-button {
@@ -150,7 +150,7 @@ body {
     width: 300px; /* PC/広い画面での固定幅 */
     padding: 15px;
     border: 1px solid #ccc;
-    
+    overflow:hidden;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }

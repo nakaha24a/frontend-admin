@@ -130,7 +130,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
               )}
 
               {/* 調理チェック */}
-              {/* トグルで調理開始完了を操作 */}
+              {/* トグルで調理開始・完了を操作 */}
               {isCookingColumn && (
               <div style={{ marginTop: 8 }}>
                 <button
@@ -168,7 +168,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
                     })}
       </ul>
 
-      {/* 全ての完了が入るまでボタンは非活性 */}
+      {/* 全ての料理が完了になるまでボタンは非活性 */}
       <button
         disabled={!isButtonEnabled}
         onClick={() =>
