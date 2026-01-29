@@ -21,16 +21,17 @@ const OrderColumn: React.FC<OrderColumnProps> = ({
   width = 300,
 }) => {
   return (
-    <div
+    <div 
       style={{
         flexShrink: 0,
         width,
+        height: "100%", 
         padding: "10px",
         border: "1px solid #eee",
         backgroundColor: "#f9f9f9",
         display: "flex",
         flexDirection: "column",
-        minHeight: "100%",
+        
       }}
     >
       <h2

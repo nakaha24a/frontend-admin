@@ -27,7 +27,7 @@ function App() {
           style={{
             display: "flex",
             flexDirection: "column",
-            height: "100vh",
+            height: "auto",
             backgroundColor: "#f3f4f6",
           }}
         >
