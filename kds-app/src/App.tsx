@@ -63,7 +63,7 @@ function App() {
           </div>
 
           {/* メイン内容 */}
-          <div style={{ flex: 1, overflow: "auto", padding: "1rem" }}>
+          <div style={{ flex: 1, padding: "1rem" }}>
             <MenuManagementPage />
           </div>
         </div>

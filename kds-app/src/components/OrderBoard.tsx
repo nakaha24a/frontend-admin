@@ -53,7 +53,7 @@ const OrderBoard: React.FC<OrderBoardProps> = ({
         display: "flex",
         gap: "1rem",
         height: "100%",
-        overflowX: "auto",
+        
       }}
     >
       {STATUSES.map((status) => (

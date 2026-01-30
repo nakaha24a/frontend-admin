@@ -151,7 +151,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
                     background:
                       state === 0 ? "#3b82f6" :
                       state === 1 ? "#eab308" :
-                      "#22c55e",
+                      "#9ca3af",
                     color: "#fff",
                     boxShadow: "0 2px 4px rgba(0,0,0,0.15)",
                     transition: "all 0.2s ease",
