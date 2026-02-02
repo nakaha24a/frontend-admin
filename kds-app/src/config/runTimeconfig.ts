@@ -1,6 +1,7 @@
 let config: {
   API_BASE_URL: string;
   WS_URL: string;
+  apiBaseUrl: string;
 } | null = null;
 
 export const loadConfig = async () => {
