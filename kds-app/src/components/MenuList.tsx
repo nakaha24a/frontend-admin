@@ -3,8 +3,9 @@ import React, { useMemo, useState } from "react";
 import type { Menu } from "../types/menu";
 import { MenuEdit } from "./MenuEdit";
 import { updateMenu, deleteMenu } from "../api/backendapi";
+import { getConfig } from "../config/runTimeconfig";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const API_BASE_URL = getConfig().apiBaseUrl;
 
 type MenuListProps = {
   menus: Menu[];

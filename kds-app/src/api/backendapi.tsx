@@ -2,6 +2,7 @@
 import type { ApiOrderStatus, Order } from "../types/order";
 import type { MenuResponse } from "../types/menu";
 import type { MenuImage } from "../types/menuimage";
+import { getConfig } from "../config/runTimeconfig";
 
 export interface KitchenOrder {
   id: number;
@@ -13,7 +14,7 @@ export interface KitchenOrder {
 }
 
 // 環境変数 (ここは .env の設定、つまり ...16:3000 が使われます)
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
+const API_BASE_URL = getConfig().apiBaseUrl;
 
 export async function fetchKitchenOrders(): Promise<KitchenOrder[]> {
   const url = `${API_BASE_URL}/api/kitchen/orders`;
