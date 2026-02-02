@@ -5,7 +5,7 @@ import { MenuEdit } from "./MenuEdit";
 import { updateMenu, deleteMenu } from "../api/backendapi";
 import { getConfig } from "../config/runTimeconfig";
 
-const API_BASE_URL = getConfig().apiBaseUrl;
+
 
 type MenuListProps = {
   menus: Menu[];
@@ -16,6 +16,8 @@ export const MenuList: React.FC<MenuListProps> = ({ menus, reload }) => {
   const [editTarget, setEditTarget] = useState<Menu | null>(null);
   const [modalImageUrl, setModalImageUrl] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+
+  const API_BASE_URL = getConfig().apiBaseUrl;
 
   const CATEGORY_COLORS = [
     "#E3F2FD",

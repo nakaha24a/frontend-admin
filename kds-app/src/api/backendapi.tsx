@@ -14,9 +14,10 @@ export interface KitchenOrder {
 }
 
 // 環境変数 (ここは .env の設定、つまり ...16:3000 が使われます)
-const API_BASE_URL = getConfig().apiBaseUrl;
+
 
 export async function fetchKitchenOrders(): Promise<KitchenOrder[]> {
+  const API_BASE_URL = getConfig().apiBaseUrl;
   const url = `${API_BASE_URL}/api/kitchen/orders`;
   const response = await fetch(url);
   if (!response.ok) throw new Error("Failed to fetch kitchen orders");
@@ -29,6 +30,7 @@ export async function updateOrderStatus(
   orderId: string,
   newStatus: ApiOrderStatus
 ) {
+  const API_BASE_URL = getConfig().apiBaseUrl;
   const url = `${API_BASE_URL}/api/orders/${orderId}/status`;
   const response = await fetch(url, {
     method: "PUT",
@@ -44,6 +46,7 @@ export async function updateOrderStatus(
 export async function fetchOrdersByTable(
   tableNumber: string
 ): Promise<Order[]> {
+  const API_BASE_URL = getConfig().apiBaseUrl;
   const url = `${API_BASE_URL}/api/orders?tableNumber=${tableNumber}`;
   const res = await fetch(url);
   if (!res.ok) throw new Error("注文取得失敗");
@@ -59,6 +62,7 @@ export async function fetchOrdersByTable(
 }
 
 export async function fetchTableNumbers(): Promise<string[]> {
+  const API_BASE_URL = getConfig().apiBaseUrl;
   const res = await fetch(`${API_BASE_URL}/api/tables`);
   if (!res.ok) throw new Error("テーブル番号取得失敗");
   return res.json();
@@ -69,6 +73,7 @@ export async function fetchTableNumbers(): Promise<string[]> {
 // メニュー一覧取得API呼び出し
 
 export const fetchMenuList = async (): Promise<MenuResponse> => {
+  const API_BASE_URL = getConfig().apiBaseUrl;
   const res = await fetch(`${API_BASE_URL}/api/menu`);
   if (!res.ok) {
     const contentType = res.headers.get("content-type");
@@ -97,7 +102,7 @@ export const createMenu = async (menu: MenuImage): Promise<void> => {
     const filename = menu.imageFile.name;
     formData.append("imageFile", menu.imageFile, filename);
   }
-
+  const API_BASE_URL = getConfig().apiBaseUrl;
   const res = await fetch(`${API_BASE_URL}/api/menu`, {
     method: "POST",
     body: formData, // ★Content-Type はブラウザが自動で multipart/form-data に設定
@@ -114,6 +119,7 @@ export const updateMenu = async (
   id: string,
   formData: FormData
 ): Promise<void> => {
+  const API_BASE_URL = getConfig().apiBaseUrl;
   const res = await fetch(`${API_BASE_URL}/api/menu/${id}`, {
     method: "POST",
     body: formData, // ★そのまま送る
@@ -127,6 +133,7 @@ export const updateMenu = async (
 
 // メニュー削除
 export const deleteMenu = async (id: string): Promise<void> => {
+  const API_BASE_URL = getConfig().apiBaseUrl;
   const res = await fetch(`${API_BASE_URL}/api/menu/${id}`, {
     method: "DELETE",
   });
