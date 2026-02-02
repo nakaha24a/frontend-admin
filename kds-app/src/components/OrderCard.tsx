@@ -120,7 +120,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
                 <ul style={{ paddingLeft: 16, marginTop: 4, fontSize: 13 }}>
                   {item.options.map(
                     (opt: { name: string }, oidx: number) => (
-                      <li key={oidx}>・{opt.name}</li>
+                      <li key={oidx}>{opt.name}</li>
                     )
                   )}
                  {console.log("item.options:", item.options)}
